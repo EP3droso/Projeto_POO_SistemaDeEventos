@@ -18,19 +18,21 @@ public class Main {
 	}
 	
 	private static void mostrarMenuPrincipal(Main main) {
+		System.out.println("---------------------------------------------");
 		System.out.println("MENU de " + main.getNomeEmpresa());
 		System.out.println("1 - Cadastro de Evento");
 		System.out.println("2 - Cadastro de Colaboradores");
 		System.out.println("3 - Menu de Eventos");
-		System.out.println("4 - Menu de Recursos");
-		System.out.println("5 - Relatorios");
+		System.out.println("4 - Menu de Tarefas no Sistema");
+		System.out.println("5 - Menu de Recursos");
+		System.out.println("6 - Relatorios");
 		System.out.println("0 - Sair");
 	}
 	
 	
 	private static void mostrarMenuEventos(){
 		System.out.println("MENU de Eventos");
-		System.out.println("1 - Cadastro de Tarefa");
+		System.out.println("1 - Cadastro de Tarefa no Evento");
 		System.out.println("0 - Sair");
 	}
 	
@@ -46,7 +48,6 @@ public class Main {
 		System.out.println("Insira sua senha:");
 		sc.next();
 		System.out.println("Seja muito bem vindo " + nome + "!");
-		
 	}
 	
 
@@ -61,7 +62,7 @@ public class Main {
 		Empresa empresa = new Empresa(main.getNomeEmpresa());
 		
 		System.out.println("Seja bem vindo ao menu principal do Sistema de Controle de Eventos (**o menu visual será inserido posteriormente)");
-		
+
 		//LOOP Principal 
 		for(;;) {
 			mostrarMenuPrincipal(main);
@@ -105,6 +106,9 @@ public class Main {
 				
 				System.out.println("Insira o funcao do colaborador:");
 				String funcao = sc.nextLine();
+				
+				Colaborador colaboradorAux = new Colaborador();
+				empresa.cadastrarColaboradores(colaboradorAux);
 			}	
 			
 			else if(intEntrada == 3) {
@@ -128,10 +132,15 @@ public class Main {
 			
 			else if(intEntrada == 5) {
 				System.out.println("Em construção");
+			}	
+			
+			else if(intEntrada == 6) {
+				System.out.println("Em construção");
 			}
 			
 			else if(intEntrada == 0) {
-				break;
+				System.out.println("Saindo...");
+				System.exit(0);
 			}
 			
 			else {
@@ -139,7 +148,6 @@ public class Main {
 			}
 				
 			
-
 		}
 	}
 }
