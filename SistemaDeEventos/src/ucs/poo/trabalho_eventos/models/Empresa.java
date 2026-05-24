@@ -27,6 +27,7 @@ public class Empresa {
 	
 	
 	public void listarEventos() {
+		System.out.println("Os eventos cadastrados são:");
 		for(Evento evento : eventos){
 			System.out.println("Evento " + evento.getNome() + "  ID: " + evento.getId());
 		}

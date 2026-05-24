@@ -20,9 +20,10 @@ public class Main {
 	private static void mostrarMenuPrincipal(Main main) {
 		System.out.println("MENU de " + main.getNomeEmpresa());
 		System.out.println("1 - Cadastro de Evento");
-		System.out.println("2 - Menu de Eventos");
-		System.out.println("3 - Menu de Recursos");
-		System.out.println("4 - Relatorios");
+		System.out.println("2 - Cadastro de Colaboradores");
+		System.out.println("3 - Menu de Eventos");
+		System.out.println("4 - Menu de Recursos");
+		System.out.println("5 - Relatorios");
 		System.out.println("0 - Sair");
 	}
 	
@@ -73,7 +74,7 @@ public class Main {
 				
 				System.out.println("Insira o tipo do evento:\n1-Festa\n2-Formatura\n3-Evento Corporativo");
 				Evento eventoAux;
-				int case1Entrada = sc.nextInt();
+				int case1Entrada = Utilitarios.lerInteiroComVerificacao();
 				
 				
 				if(case1Entrada == 1) {
@@ -93,9 +94,24 @@ public class Main {
 			}
 			
 			else if(intEntrada == 2) {
+				System.out.println("Insira o nome do colaborador:");
+				String nome = sc.nextLine();
+				
+				System.out.println("Insira o email do colaborador:");
+				String email = sc.nextLine();
+				
+				System.out.println("Insira o senha do colaborador:");
+				String senha = sc.nextLine();
+				
+				System.out.println("Insira o funcao do colaborador:");
+				String funcao = sc.nextLine();
+			}	
+			
+			else if(intEntrada == 3) {
+				empresa.listarEventos();
 				mostrarMenuEventos();
-				int case2Entrada = sc.nextInt();
-				sc.nextLine();
+				int case2Entrada = Utilitarios.lerInteiroComVerificacao();
+				
 				if(case2Entrada == 1) {
 					System.out.println("a");
 				}
@@ -105,13 +121,14 @@ public class Main {
 				}
 			}
 			
-			else if(intEntrada == 3) {
-				System.out.println("Em construção");
-			}	
 			
 			else if(intEntrada == 4) {
 				System.out.println("Em construção");
 			}	
+			
+			else if(intEntrada == 5) {
+				System.out.println("Em construção");
+			}
 			
 			else if(intEntrada == 0) {
 				break;
