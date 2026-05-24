@@ -10,10 +10,13 @@ public abstract class Evento {
 	private List<Tarefa> tarefas;
 	
 	
-	public Evento(int id, String nome){
-		this.id = id;
+	public Evento(String nome){
 		this.nome = nome;
 		tarefas = new ArrayList<>();
+	}
+	
+	public void eventoSendoCadastrado(int index){
+		this.id = index;
 	}
 	
 	public void acompanharAndamento() {
@@ -47,9 +50,7 @@ public abstract class Evento {
 	public int getId() {
 		return id;
 	}
-	public void setId(int id) {
-		this.id = id;
-	}
+
 	public String getNome() {
 		return nome;
 	}

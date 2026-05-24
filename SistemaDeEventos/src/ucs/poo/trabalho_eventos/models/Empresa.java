@@ -18,11 +18,29 @@ public class Empresa {
 	
 	public void cadastrarEvento(Evento evento) {
 		eventos.add(evento);
+		evento.eventoSendoCadastrado(eventos.indexOf(evento));
 	}
 	
 	public void cadastrarColaboradores(Colaborador colaborador) {
 		colaboradores.add(colaborador);
 	}
+	
+	
+	public void listarEventos() {
+		for(Evento evento : eventos){
+			System.out.println("Evento " + evento.getNome() + "  ID: " + evento.getId());
+		}
+	}
+	
+	public Evento getEvento(int id){
+		return eventos.get(id);
+	}
+	
+	/*
+	public Colaborador getColaborador(int id) {
+		return colaboradores.get(id);
+	}
+	*/
 	
 	public String getNome() {
 		return nome;
