@@ -18,22 +18,25 @@ public abstract class Evento {
 	
 	public void acompanharAndamento() {
 		int tam = tarefas.size(), tarRealizadas = 0;
-		
+		/*
 		for(Tarefa tarefa : tarefas) {
 			if(tarefa.getColaboradorTarefa() != null ) {
 				tarRealizadas +=1;
 			}
 		}
-		
-		System.out.println("O evento já foi "|| (tarRealizadas*100)/tam || "% realizado");
+		*/
+
+		System.out.println("O evento já foi " + ((tarRealizadas*100)/tam) + "% realizado");
 	}
 	
 	public void consultarHistoricoTarefas() {
+		/*
 		for(Tarefa tarefa : tarefas) {
 			if(tarefa.getColaboradorTarefa() != null ) {
-				 System.out.println("Tarefa "|| tarefa.getNome() || " Realizada");
+				 System.out.println("Tarefa "+ tarefa.getNome() + " Realizada");
 			}
 		}
+		*/
 	}
 	
 	
