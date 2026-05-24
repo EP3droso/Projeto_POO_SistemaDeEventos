@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Empresa {
+
 	private String nome;
 	private List<Evento> eventos;
 	private List<Colaborador> colaboradores;
@@ -30,7 +31,5 @@ public class Empresa {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
-	
 
 }
