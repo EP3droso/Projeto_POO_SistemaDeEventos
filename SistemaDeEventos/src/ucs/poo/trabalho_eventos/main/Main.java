@@ -18,7 +18,7 @@ public class Main {
 	}
 	
 	private static void mostrarMenuPrincipal(Main main) {
-		System.out.println("MENU de " + main.getNomeEmpresa());
+		System.out.println("\nMENU de " + main.getNomeEmpresa());
 		System.out.println("1 - Cadastro de Evento");
 		System.out.println("2 - Cadastro de Colaboradores");
 		System.out.println("3 - Menu de Eventos");
@@ -94,17 +94,44 @@ public class Main {
 			}
 			
 			else if(intEntrada == 2) {
-				System.out.println("Insira o nome do colaborador:");
-				String nome = sc.nextLine();
-				
-				System.out.println("Insira o email do colaborador:");
-				String email = sc.nextLine();
-				
-				System.out.println("Insira o senha do colaborador:");
-				String senha = sc.nextLine();
-				
-				System.out.println("Insira o funcao do colaborador:");
-				String funcao = sc.nextLine();
+
+			    try {
+
+			        System.out.println("Insira o nome do colaborador:");
+			        String nome = sc.nextLine();
+
+			        System.out.println("Insira o email do colaborador:");
+			        String email = sc.nextLine();
+
+			        System.out.println("Insira o senha do colaborador:");
+			        String senha = sc.nextLine();
+
+			        System.out.println("Insira o funcao do colaborador:");
+			        String funcao = sc.nextLine();
+
+			        Colaborador colaboradorAux = new Colaborador(
+			                nome,
+			                email,
+			                senha,
+			                funcao
+			        );
+
+			        Colaborador.incluir(colaboradorAux);
+
+			        System.out.println("Colaborador cadastrado com sucesso!");
+
+			        //System.out.println("\nLISTA DE COLABORADORES:");
+
+			        //for (Colaborador c : Colaborador.listarTodos()) {
+			        //    System.out.println(c);
+			        //}
+
+			    }
+			    catch(IllegalArgumentException e) {
+
+			        System.out.println("ERRO: " + e.getMessage());
+
+			    }
 			}	
 			
 			else if(intEntrada == 3) {
