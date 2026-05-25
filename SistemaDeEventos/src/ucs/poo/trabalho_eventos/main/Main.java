@@ -1,5 +1,7 @@
 package ucs.poo.trabalho_eventos.main;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import ucs.poo.trabalho_eventos.models.*;
@@ -8,6 +10,9 @@ import ucs.poo.trabalho_eventos.main.Utilitarios;
 public class Main {
 	
 	private String nomeEmpresa;
+	public List<Tarefa> tarefasDB = new ArrayList<>();
+	//public List<Recurso> recursosDB = new ArrayList<>();
+	
 	
 	private String getNomeEmpresa() {
 		return nomeEmpresa;
@@ -22,10 +27,11 @@ public class Main {
 		System.out.println("MENU de " + main.getNomeEmpresa());
 		System.out.println("1 - Cadastro de Evento");
 		System.out.println("2 - Cadastro de Colaboradores");
-		System.out.println("3 - Menu de Eventos");
-		System.out.println("4 - Menu de Tarefas no Sistema");
-		System.out.println("5 - Menu de Recursos");
-		System.out.println("6 - Relatorios");
+		System.out.println("3 - Cadastro de Tarefas");
+		System.out.println("4 - Cadastro de Recursos");
+		System.out.println("5 - Menu de Eventos");
+		System.out.println("6 - Menu de Eventos");
+		System.out.println("7 - Relatorios");
 		System.out.println("0 - Sair");
 	}
 	
@@ -35,6 +41,7 @@ public class Main {
 		System.out.println("1 - Cadastro de Tarefa no Evento");
 		System.out.println("0 - Sair");
 	}
+	
 	
 	
 	private static void login(Main main) {
@@ -50,7 +57,12 @@ public class Main {
 		System.out.println("Seja muito bem vindo " + nome + "!");
 	}
 	
-
+	
+	private static void listarTarefas(Main main) {
+		for(Tarefa tarefa : main.tarefasDB) {
+			System.out.println(main.tarefasDB.indexOf(tarefa) + " - " /*+ tarefa.getNome()*/);
+		}
+	}
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -112,17 +124,24 @@ public class Main {
 			}	
 			
 			else if(intEntrada == 3) {
-				empresa.listarEventos();
-				mostrarMenuEventos();
-				int case2Entrada = Utilitarios.lerInteiroComVerificacao();
+				System.out.println("Insira o nome da tarefa:");
+				String nome = sc.nextLine();
+				Tarefa tarefaAux = new Tarefa(/*nome*/);
 				
-				if(case2Entrada == 1) {
-					System.out.println("a");
+				System.out.println("Dentre as tarefas existentes, indique o numero das quais são pre-requisitos(digite 1 por vez):");
+				String leitura = "N";
+				/*
+				while(!"N".equals(leitura)){
+				
+					listarTarefas(main);
+					int preRequisito = Utilitarios.lerInteiroComVerificacao();
+					// adiciona o pre-requisito a tarefaAux
+					
+					System.out.println("Tem mais algum pre requisito?");
+					leitura = sc.nextLine();
 				}
-				if(case2Entrada == 2) {
-					System.out.println("Retornando ao menu principal");
-
-				}
+				*/
+				main.tarefasDB.add(tarefaAux);
 			}
 			
 			
@@ -131,10 +150,34 @@ public class Main {
 			}	
 			
 			else if(intEntrada == 5) {
-				System.out.println("Em construção");
+				System.out.println("Selecione o id do evento que deseja entrar");
+				empresa.listarEventos();
+				int indexEvento = Utilitarios.lerInteiroComVerificacao();
+				Evento eventoAux = empresa.getEvento(indexEvento);
+				
+				mostrarMenuEventos();
+				int case2Entrada = Utilitarios.lerInteiroComVerificacao();
+				
+				if(case2Entrada == 1) {
+					System.out.println("Das tarefas do sistema, qualo id da que você deseja cadastrar ao evento?");
+					listarTarefas(main);
+					
+					int idTarefa = Utilitarios.lerInteiroComVerificacao();
+					
+					Tarefa tarefaAux = main.tarefasDB.get(idTarefa);
+					eventoAux.cadastrarTarefa(tarefaAux);
+				}
+				else if(case2Entrada == 2) {
+					System.out.println("Retornando ao menu principal");
+
+				}
 			}	
 			
 			else if(intEntrada == 6) {
+				System.out.println("Em construção");
+			}
+			
+			else if(intEntrada == 7) {
 				System.out.println("Em construção");
 			}
 			
