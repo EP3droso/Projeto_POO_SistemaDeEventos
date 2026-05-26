@@ -32,7 +32,6 @@ public class Main {
 	}
 	
 	private static void mostrarMenuPrincipal(Main main) {
-		System.out.println("---------------------------------------------");
 		System.out.println("MENU de " + main.getNomeEmpresa());
 		System.out.println("1 - Cadastro de Evento");
 		System.out.println("2 - Menu de Colaboradores");
@@ -711,6 +710,8 @@ public class Main {
 			    	System.out.println("Informe o ID do colaborador:");
 			    	int id = Utilitarios.lerInteiroComVerificacao();
 			    	empresa.excluirColaborador(id);
+
+
 			    }
 			}	
 			

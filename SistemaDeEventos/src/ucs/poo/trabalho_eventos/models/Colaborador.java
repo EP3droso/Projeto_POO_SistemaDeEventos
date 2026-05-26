@@ -30,8 +30,7 @@ public class Colaborador {
         this.senha = senha;
         this.funcao = funcao;
     }
-
-    //Getters / Setters 
+ 
 
     public int getId() { 
         return id; 
@@ -44,7 +43,6 @@ public class Colaborador {
     public void setNome(String nome) { 
         this.nome = nome; 
     }
-    
     public String getEmail() {
         return email; 
     }
