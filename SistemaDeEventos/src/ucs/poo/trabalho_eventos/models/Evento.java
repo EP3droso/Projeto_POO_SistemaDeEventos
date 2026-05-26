@@ -9,6 +9,9 @@ public abstract class Evento {
 	private String nome;
 	private List<Tarefa> tarefas;
 	
+	public List<Tarefa> getTarefas() {
+	    return tarefas;
+	}
 	
 	public Evento(String nome){
 		this.nome = nome;

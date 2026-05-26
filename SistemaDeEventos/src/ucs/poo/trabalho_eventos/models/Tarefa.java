@@ -3,13 +3,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.Date;
 
 import ucs.poo.trabalho_eventos.main.Utilitarios;
 
 public class Tarefa {
 	private String nome;
 	List<Tarefa> preRequesitos = new ArrayList<>();
-	List<RecursoTarefa> recursosTarefas = new ArrayList<>();	
+	List<RecursoTarefa> recursosTarefas = new ArrayList<>();
+	List<ColaboradorTarefa> colaboradoresTarefas = new ArrayList<>();
 	
 	
 	public Tarefa() {
@@ -151,16 +153,21 @@ public class Tarefa {
 	        recursosTarefas.add(new RecursoTarefa(recursoAux, this));
 	        System.out.println("Recurso " + recursoEncontrado.getNome() + " adicionado com sucesso à tarefa!");
 	    }
-	    sc.close();
 	}
 	
-
+	
+	public void registrarExecucaoTarefa(Colaborador colaborador, Date horaIni, Date horaFim){
+	    ColaboradorTarefa execucao = new ColaboradorTarefa(colaborador, horaIni, horaFim);
+	    colaboradoresTarefas.add(execucao);
+	    System.out.println("Execução registrada com sucesso!");
+	}
+	
 	public List<RecursoTarefa> getRecursosTarefas() {
 	    return this.recursosTarefas;
 	}
 	
-	public void registrarExecucaoTarefa(){
-	
+	public List<ColaboradorTarefa> getColaboradoresTarefas() {
+	    return colaboradoresTarefas;
 	}
 	
 	public List<Tarefa> getPreRequesitos() {
