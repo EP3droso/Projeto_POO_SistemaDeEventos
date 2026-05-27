@@ -11,37 +11,41 @@ public class Empresa {
 	
 	public Empresa(String nome) {
 		this.nome = nome;
-		eventos = new ArrayList<>();
-		colaboradores = new ArrayList<>();
+		this.eventos = new ArrayList<>();
+		this.colaboradores = new ArrayList<>();
+	}
+	
+	public boolean eventosIsEmpty(){
+		return this.eventos.isEmpty();
 	}
 	
 	
 	public void cadastrarEvento(Evento evento) {
-		eventos.add(evento);
-		evento.eventoSendoCadastrado(eventos.indexOf(evento));
+		this.eventos.add(evento);
+		evento.eventoSendoCadastrado(this.eventos.indexOf(evento));
 	}
 	
 	public void cadastrarColaboradores(Colaborador colaborador) {
-		colaboradores.add(colaborador);
+		this.colaboradores.add(colaborador);
 	}
 	
 	
 	public void listarEventos() {
 		System.out.println("Os eventos cadastrados são:");
-		for(Evento evento : eventos){
+		for(Evento evento : this.eventos){
 			System.out.println("Evento " + evento.getNome() + "  ID: " + evento.getId());
 		}
 	}
 	
 	public Evento getEvento(int id){
-		return eventos.get(id);
+		return this.eventos.get(id);
 	}
 	
-	/*
+	
 	public Colaborador getColaborador(int id) {
-		return colaboradores.get(id);
+		return this.colaboradores.get(id);
 	}
-	*/
+	
 	
 	public String getNome() {
 		return nome;

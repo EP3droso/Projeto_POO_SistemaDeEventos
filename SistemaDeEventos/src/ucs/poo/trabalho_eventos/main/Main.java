@@ -37,8 +37,7 @@ public class Main {
 		System.out.println("3 - Controle de Tarefas");
 		System.out.println("4 - Controle de Recursos");
 		System.out.println("5 - Menu de Eventos");
-		System.out.println("6 - Menu de Eventos");
-		System.out.println("7 - Relatorios");
+		System.out.println("6 - Relatorios");
 		System.out.println("0 - Sair");
 	}
 	
@@ -48,8 +47,7 @@ public class Main {
 		System.out.println("1 - Cadastro de Tarefa no Evento");
 		System.out.println("0 - Sair");
 	}
-	
-	
+
 	
 	private static void login(Main main) {
 		Scanner sc = new Scanner(System.in);
@@ -733,36 +731,40 @@ public class Main {
 			}	
 			
 			else if(intEntrada == 5) {
-				System.out.println("Selecione o id do evento que deseja entrar");
-				empresa.listarEventos();
-				int indexEvento = Utilitarios.lerInteiroComVerificacao();
-				Evento eventoAux = empresa.getEvento(indexEvento);
-				
-				mostrarMenuEventos();
-				int case2Entrada = Utilitarios.lerInteiroComVerificacao();
-				
-				if(case2Entrada == 1) {
-					System.out.println("Das tarefas do sistema, qualo id da que você deseja cadastrar ao evento?");
-					listarTarefas(main);
+				if(!empresa.eventosIsEmpty()) {
 					
-					int idTarefa = Utilitarios.lerInteiroComVerificacao();
+					System.out.println("Selecione o id do evento que deseja entrar");
+					empresa.listarEventos();
+					int indexEvento = Utilitarios.lerInteiroComVerificacao();
+					Evento eventoAux = empresa.getEvento(indexEvento);
 					
-					Tarefa tarefaAux = main.tarefasDB.get(idTarefa);
-					eventoAux.cadastrarTarefa(tarefaAux);
-				}
-				else if(case2Entrada == 2) {
-					System.out.println("Retornando ao menu principal");
+					mostrarMenuEventos();
+					int case2Entrada = Utilitarios.lerInteiroComVerificacao();
+					
+					if(case2Entrada == 1) {
+						System.out.println("Das tarefas do sistema, qualo id da que você deseja cadastrar ao evento?");
+						listarTarefas(main);
+						
+						int idTarefa = Utilitarios.lerInteiroComVerificacao();
+						
+						Tarefa tarefaAux = main.tarefasDB.get(idTarefa);
+						eventoAux.cadastrarTarefa(tarefaAux);
+				
+					}
+					else if(case2Entrada == 2) {
+						System.out.println("Retornando ao menu principal");
 
+					}
 				}
-			}	
+				else{
+					System.out.println("Não tem eventos cadastrados na empresa");
+				}
+			}
 			
 			else if(intEntrada == 6) {
 				System.out.println("Em construção");
 			}
 			
-			else if(intEntrada == 7) {
-				System.out.println("Em construção");
-			}
 			
 			else if(intEntrada == 0) {
 				System.out.println("Saindo...");
