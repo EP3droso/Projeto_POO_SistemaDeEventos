@@ -59,16 +59,44 @@ public class Empresa implements Relatorio {
     public void cadastrarColaborador(Colaborador colaborador) {
         colaboradores.add(colaborador);
     }
-
-    public void listarColaboradores() {
+    
+    public void alterarColaborador(int id, String novoNome, String novoEmail, String novaSenha, String novaFuncao) {
+    	Colaborador colaborador = getColaborador(id);
+    	
+		if(colaborador == null) {
+			System.out.println("Colaborador não encontrado.");
+			return;
+		}
+		
+		colaborador.setNome(novoNome);
+		colaborador.setEmail(novoEmail);
+		colaborador.setSenha(novaSenha);
+		colaborador.setFuncao(novaFuncao);	
+		
+		System.out.println("Colaborador alterado com sucesso!");
+	}
+    public void mostrarColaboradores() {
         if(colaboradores.isEmpty()) {
             System.out.println("Nenhum colaborador cadastrado.");
             return;
         }
-
-        System.out.println("Lista de Colaboradores:");
+        System.out.println("Colaboradores cadastrados:");
         for(Colaborador colaborador : colaboradores) {
-            System.out.println(colaborador);
+            System.out.println("ID: " + colaborador.getId()+ " | Nome: " + colaborador.getNome());
+        }
+    }
+    
+    public void buscarColaboradorPorNome(String nome) {
+        boolean encontrado = false;
+        for(Colaborador colaborador : colaboradores) {
+            if(colaborador.getNome().equalsIgnoreCase(nome)) {
+                System.out.println(colaborador);
+                encontrado = true;
+            }
+        }
+
+        if(!encontrado) {
+            System.out.println("Nenhum colaborador encontrado com esse nome.");
         }
     }
 

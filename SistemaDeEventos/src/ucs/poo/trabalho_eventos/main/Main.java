@@ -54,10 +54,10 @@ public class Main {
 	    System.out.println("---------------------------------------------");
 	    System.out.println("MENU de Colaboradores");
 	    System.out.println("1 - Cadastrar Colaborador");
-	    System.out.println("2 - Listar Colaboradores");
+	    System.out.println("2 - Listar Colaboradores por nome");
 	    System.out.println("3 - Consultar Colaborador por ID");
 	    System.out.println("4 - Excluir Colaborador");
-	    System.out.println("0 - Voltar");
+	    System.out.println("5 - Alterar Colaborador");
 	}
 	
 
@@ -196,7 +196,7 @@ public class Main {
 	    }
 	    
 	    System.out.println("\nCOLABORADORES CADASTRADOS:");
-	    empresa.listarColaboradores();
+	    empresa.mostrarColaboradores();
 
 	    System.out.print("Digite o ID do colaborador responsável: ");
 	    int idColaborador = Utilitarios.lerInteiroComVerificacao();
@@ -399,7 +399,6 @@ public class Main {
 	        while (loopAdicionar) {
 	            java.util.List<Tarefa> disponiveis = new java.util.ArrayList<>();
 	            for (Tarefa t1 : main.tarefasDB) {
-	                // CORRIGIDO AQUI: Usa 'tarefaAlvo' e valida o ciclo recursivo corretamente
 	                if (!t1.equals(tarefaAlvo) && !tarefaAlvo.getPreRequesitos().contains(t1) && !tarefaAlvo.verificaCiclo(t1, tarefaAlvo)) {
 	                    disponiveis.add(t1);
 	                }
@@ -667,6 +666,52 @@ public class Main {
 			}
 		}
 	}	    	    
+	
+	public static void excluirTarefa(Main main) {
+	    Scanner sc = new Scanner(System.in);
+	    
+	    if (main.tarefasDB.isEmpty()) {
+	        System.out.println("Nenhuma Tarefa cadastrada no sistema para Excluir.");
+	        return;
+	    }
+	    
+	    listarTarefas(main);
+	    System.out.println("Nome da tarefa a ser Removida: ");
+	    String nomeTarefa = sc.nextLine();
+	    
+	    Tarefa tarefaParaRemover = null;
+	    for (Tarefa t : main.tarefasDB) {
+	        if (t.getNome().equalsIgnoreCase(nomeTarefa)) {
+	            tarefaParaRemover = t;
+	            break;
+	        }
+	    }
+	    
+	    if (tarefaParaRemover == null) {
+	        System.out.println("Tarefa não encontrada!");
+	        return;
+	    }
+	    
+	    for (RecursoTarefa rt : tarefaParaRemover.getRecursosTarefas()) {
+	        Recurso recursoAlocado = rt.getRecurso();
+	        
+	        for (Recurso recursoGlobal : main.recursosDB) {
+	            if (recursoGlobal.getId() == recursoAlocado.getId()) {
+	                recursoGlobal.atualizarQuantidade(-recursoAlocado.getQuantidade());
+	                break;
+	            }
+	        }
+	    }
+	    
+	    for (Tarefa t : main.tarefasDB) {
+	        if (!t.equals(tarefaParaRemover)) {
+	            t.getPreRequesitos().remove(tarefaParaRemover);
+	        }
+	    }
+	    
+	    main.tarefasDB.remove(tarefaParaRemover);
+	    System.out.println("Tarefa '" + tarefaParaRemover.getNome() + "' excluída com sucesso! Recursos devolvidos ao estoque e dependências atualizadas.");
+	}
 
 	
 	
@@ -743,38 +788,89 @@ public class Main {
 
 				    }
 			    }
+			}
 			    
-			    else if(escolhaColab == 2) {
-			    	empresa.listarColaboradores();
-			    }
-			    
-			    else if(escolhaColab == 3) {
-			    	System.out.println("Informe o ID do colaborador:");
-			    	int id = Utilitarios.lerInteiroComVerificacao();
-			    	Colaborador colaborador = empresa.getColaborador(id);
-			    	
-			    	if(colaborador == null) {
-			    	    System.out.println("Colaborador não encontrado.");
-			    	}
-			    	else {
-			    	    System.out.println(colaborador);
-			    	}
-			    }
-			    
-			    else if(escolhaColab == 4) {
-			    	System.out.println("Informe o ID do colaborador:");
-			    	int id = Utilitarios.lerInteiroComVerificacao();
-			    	empresa.excluirColaborador(id);
+			    else if(intEntrada == 2) {
+					mostrarMenuColaboradores();
+				    int escolhaColab = Utilitarios.lerInteiroComVerificacao();
+				    if(escolhaColab == 1) {
+				    	try {
 
+					        System.out.println("Insira o nome do colaborador:");
+					        String nome = sc.nextLine();
 
-			    }
-			}	
+					        System.out.println("Insira o email do colaborador:");
+					        String email = sc.nextLine();
+
+					        System.out.println("Insira a senha do colaborador:");
+					        String senha = sc.nextLine();
+
+					        System.out.println("Insira a função do colaborador:");
+					        String funcao = sc.nextLine();
+					        
+					        Colaborador colaboradorAux = new Colaborador(nome, email, senha, funcao);
+					        empresa.cadastrarColaborador(colaboradorAux);
+
+					        System.out.println("Colaborador cadastrado com sucesso!");
+
+					    }
+					    catch (IllegalArgumentException e) {
+
+					        System.out.println("ERRO: " + e.getMessage());
+
+					    }
+				    }
+				    
+				    else if(escolhaColab == 2) {
+				        empresa.mostrarColaboradores();
+				        System.out.println("Informe o nome do colaborador:");
+				        String nome = sc.nextLine();
+				        empresa.buscarColaboradorPorNome(nome);
+				    }
+				    
+				    else if(escolhaColab == 3) {
+				        empresa.mostrarColaboradores();
+				        System.out.println("Informe o ID do colaborador:");
+				        int id = Utilitarios.lerInteiroComVerificacao();
+				        Colaborador colaborador = empresa.getColaborador(id);
+				        if(colaborador == null) {
+				            System.out.println("Colaborador não encontrado.");
+				        }
+				        else {
+				            System.out.println(colaborador);
+				        }
+				    }
+				    
+				    else if(escolhaColab == 4) {
+				        empresa.mostrarColaboradores();
+				        System.out.println("Informe o ID do colaborador:");
+				        int id = Utilitarios.lerInteiroComVerificacao();
+				        empresa.excluirColaborador(id);
+				    }
+				    
+				    else if(escolhaColab == 5) {
+				        empresa.mostrarColaboradores();
+				        System.out.println("Informe o ID do colaborador:");
+				        int id = Utilitarios.lerInteiroComVerificacao();
+				        sc.nextLine();
+				        System.out.println("Novo nome do colaborador:");
+				        String novoNome = sc.nextLine();
+				        System.out.println("Novo email do colaborador:");
+				        String novoEmail = sc.nextLine();
+				        System.out.println("Nova senha do colaborador:");
+				        String novaSenha = sc.nextLine();
+				        System.out.println("Nova função do colaborador:");
+				        String novaFuncao = sc.nextLine();
+				        empresa.alterarColaborador(id, novoNome, novoEmail, novaSenha, novaFuncao);
+				    }
+				  
+				}		
 			
 			else if(intEntrada == 3) {
 				int escolha=10;
-				while(escolha<0 || escolha>=6) {
+				while(escolha<0 || escolha>=7) {
 					System.out.println("\n---------------------------------------------");
-					System.out.println("CONTROLE de Tarefas\n0 - Voltar ao Menu\n1 - Adicionar Nova Tarefa\n2 - Alterar infos de Tarefa especifica\n3 - Listar Tarefas\n4 - Registrar Execucao Tarefa\n5 - Registrar Recursos");
+					System.out.println("CONTROLE de Tarefas\n0 - Voltar ao Menu\n1 - Adicionar Nova Tarefa\n2 - Alterar infos de Tarefa especifica\n3 - Listar Tarefas\n4 - Registrar Execucao Tarefa\n5 - Registrar Recursos\n6 - Apagar Tarefas");
 					escolha = Utilitarios.lerInteiroComVerificacao();
 				}
 				if(escolha==1) {
@@ -800,6 +896,12 @@ public class Main {
 						System.out.println("Nenhuma tarefa cadastrada no sistema para listar");
 					else
 						registrarRecursos(main);
+				}
+				else if(escolha==6) {
+					if(main.tarefasDB.isEmpty())
+						System.out.println("Nenhuma tarefa cadastrada no sistema para deletar");
+					else
+						excluirTarefa(main);
 				}
 			}
 			
