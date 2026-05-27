@@ -56,6 +56,23 @@ public abstract class Evento {
 		}
 	}
 	
+	public Tarefa getTarefa(int id){
+		try {
+		return this.tarefas.get(id);
+		}
+		catch(IndexOutOfBoundsException e) {
+			System.out.println("Não existe uma tarefa com esse ID");
+			return null;
+		}
+	}
+	
+	public void excluirTarefa(int id) {
+		Tarefa tarefaAux = this.getTarefa(id);
+		if(tarefaAux != null) {
+			this.tarefas.remove(tarefaAux);
+		}
+	}
+	
 	public int getId() {
 		return id;
 	}
