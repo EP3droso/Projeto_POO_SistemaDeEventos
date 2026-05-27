@@ -10,6 +10,13 @@ public class Recurso {
 	private String tipo;
 	private int quantidade;
 
+	public Recurso(int id, String nome, String tipo, int quantidade) {
+	    this.id = id;
+	    this.nome = nome;
+	    this.tipo = tipo;
+	    this.quantidade = quantidade;
+	}
+	
 	public Recurso() {
         this.id = contadorId++;
     }

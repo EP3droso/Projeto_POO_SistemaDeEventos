@@ -7,32 +7,54 @@ import java.util.List;
 import ucs.poo.trabalho_eventos.interfaces.Relatorio;
 
 public class Empresa implements Relatorio {
+	
+	private String nome;
+	private List<Evento> eventos;
+	private List<Colaborador> colaboradores;
 
-    private String nome;
-    private List<Evento> eventos;
-    private List<Colaborador> colaboradores;
-
-    public Empresa(String nome) {
-        this.nome = nome;
-        eventos = new ArrayList<>();
-        colaboradores = new ArrayList<>();
-    }
-
-    public void cadastrarEvento(Evento evento) {
-        eventos.add(evento);
-        evento.eventoSendoCadastrado(eventos.indexOf(evento));
-    }
-
-    public void listarEventos() {
+	
+	public Empresa(String nome) {
+		this.nome = nome;
+		this.eventos = new ArrayList<>();
+		this.colaboradores = new ArrayList<>();
+	}
+	
+	public boolean eventosIsEmpty(){
+		return this.eventos.isEmpty();
+	}
+	
+	
+	public void cadastrarEvento(Evento evento) {
+		this.eventos.add(evento);
+		evento.eventoSendoCadastrado(this.eventos.indexOf(evento));
+	}
+	
+	public void cadastrarColaboradores(Colaborador colaborador) {
+		this.colaboradores.add(colaborador);
+	}
+	
+	
+	public void listarEventos() {
 		System.out.println("Os eventos cadastrados são:");
-		for(Evento evento : eventos){
+		for(Evento evento : this.eventos){
 			System.out.println("Evento " + evento.getNome() + "  ID: " + evento.getId());
 		}
 	}
 
-    public Evento getEvento(int id){
-		return eventos.get(id);
+	
+	public Evento getEvento(int id){
+		try {
+		return this.eventos.get(id);
+		}
+		catch(IndexOutOfBoundsException e) {
+			System.out.println("Não existe um evento com esse ID");
+			return null;
+		}
 	}
+
+
+	
+	
 
     public void cadastrarColaborador(Colaborador colaborador) {
         colaboradores.add(colaborador);

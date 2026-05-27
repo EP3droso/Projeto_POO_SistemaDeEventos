@@ -38,8 +38,7 @@ public class Main {
 		System.out.println("3 - Controle de Tarefas");
 		System.out.println("4 - Controle de Recursos");
 		System.out.println("5 - Menu de Eventos");
-		System.out.println("6 - Menu de Eventos");
-		System.out.println("7 - Relatorios");
+		System.out.println("6 - Relatorios");
 		System.out.println("0 - Sair");
 	}
 	
@@ -61,6 +60,7 @@ public class Main {
 	    System.out.println("0 - Voltar");
 	}
 	
+
 	
 	private static void login(Main main) {
 		Scanner sc = new Scanner(System.in);
@@ -174,14 +174,14 @@ public class Main {
 	public static void registrarTarefas(Main main, Empresa empresa) {
 	    Scanner sc = new Scanner(System.in);
 	    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
-	    sdf.setLenient(false); 
-
+	    sdf.setLenient(false);
+	
 	    System.out.println("Selecione a tarefa que deseja registrar a execução:");
 	    listarTarefas(main);
-
+	
 	    System.out.print("Digite o nome exato da tarefa: ");
 	    String nomeTarefa = sc.nextLine();
-
+	
 	    Tarefa tarefaAlvo = null;
 	    for (Tarefa t : main.tarefasDB) {
 	        if (t.getNome().equalsIgnoreCase(nomeTarefa)) {
@@ -189,7 +189,7 @@ public class Main {
 	            break;
 	        }
 	    }
-
+	
 	    if (tarefaAlvo == null) {
 	        System.out.println("Tarefa não encontrada!");
 	        return;
@@ -207,9 +207,10 @@ public class Main {
 	        System.out.println("Aviso: Esta tarefa não possui recursos vinculados, mas o horário será registrado nos metadados.");
 	    }
 
+
 	    java.util.Date dataInicio = null;
 	    java.util.Date dataFim = null;
-
+	
 	    while (dataInicio == null) {
 	        System.out.print("Insira a data e hora de INÍCIO (formato: DD/MM/AAAA HH:MM): ");
 	        String strInicio = sc.nextLine();
@@ -219,7 +220,7 @@ public class Main {
 	            System.out.println("Formato de data/hora inválido! Tente novamente.");
 	        }
 	    }
-
+	
 	    while (dataFim == null) {
 	        System.out.print("Insira a data e hora de TÉRMINO (formato: DD/MM/AAAA HH:MM): ");
 	        String strFim = sc.nextLine();
@@ -233,17 +234,60 @@ public class Main {
 	            System.out.println("Formato de data/hora inválido! Tente novamente.");
 	        }
 	    }
-	    
+	
 	    for (RecursoTarefa rt : tarefaAlvo.getRecursosTarefas()) {
 	        rt.setHoraIni(dataInicio);
 	        rt.setHoraFim(dataFim);
 	    }
+
 	    
 	    tarefaAlvo.registrarExecucaoTarefa(colaborador, dataInicio, dataFim);
 	    
+	
+	    if (!tarefaAlvo.getRecursosTarefas().isEmpty()) {
+	        System.out.println("\n--- AJUSTE FINAL DE RECURSOS UTILIZADOS ---");
+	        System.out.println("A tarefa terminou. Indique a quantidade real consumida de cada recurso:");
+	        
+	        for (RecursoTarefa rt : tarefaAlvo.getRecursosTarefas()) {
+	            Recurso recursoAlocado = rt.getRecurso();
+	            
+	            Recurso recursoGlobal = null;
+	            for (Recurso r : main.recursosDB) {
+	                if (r.getId() == recursoAlocado.getId()) {
+	                    recursoGlobal = r;
+	                    break;
+	                }
+	            }
+	            
+	            if (recursoGlobal == null) continue;
+	            
+	            boolean consumoValido = false;
+	            int gastoReal = 0;
+	            
+	            while (!consumoValido) {
+	                System.out.println("Recurso: " + recursoAlocado.getNome());
+	                System.out.println("Quantidade alocada original: " + recursoAlocado.getQuantidade());
+	                System.out.print("Quantidade REALMENTE consumida: ");
+	                gastoReal = Utilitarios.lerInteiroComVerificacao();
+	                
+	                if (gastoReal < 0 || gastoReal > recursoAlocado.getQuantidade()) {
+	                    System.out.println("Quantidade inválida! Não pode ser negativa nem maior que a alocada.");
+	                } else {
+	                    consumoValido = true;
+	                }
+	            }
+	            
+	            int sobra = recursoAlocado.getQuantidade() - gastoReal;
+	            if (sobra > 0) {
+	                recursoGlobal.atualizarQuantidade(-sobra);
+	                System.out.println("Foram devolvidas " + sobra + " unidades de '" + recursoAlocado.getNome() + "' ao estoque global.");
+	            }
+	            recursoAlocado.setQuantidade(gastoReal);
+	        }
+	    }
+	
+
 	    System.out.println("\nExecução da tarefa '" + tarefaAlvo.getNome() + "' registrada com sucesso!");
-	    System.out.println("Início: " + sdf.format(dataInicio));
-	    System.out.println("Término: " + sdf.format(dataFim));
 	}
 
 	
@@ -532,6 +576,17 @@ public class Main {
 			return;
 		}
 		
+	    for (Tarefa t : main.tarefasDB) {
+	        java.util.List<RecursoTarefa> paraRemover = new java.util.ArrayList<>();
+	        for (RecursoTarefa rt : t.getRecursosTarefas()) {
+	            if (rt.getRecurso().getId() == idRecurso) {
+	                paraRemover.add(rt);
+	            }
+	        }
+	        t.getRecursosTarefas().removeAll(paraRemover);
+	    }
+		
+		
 		main.recursosDB.remove(recursoParaRemover);
 		System.out.println("Recurso '" + recursoParaRemover.getNome() + "' removido com sucesso!");
 	}
@@ -794,34 +849,45 @@ public class Main {
 			}	
 			
 			else if(intEntrada == 5) {
-				System.out.println("Selecione o id do evento que deseja entrar");
-				empresa.listarEventos();
-				int indexEvento = Utilitarios.lerInteiroComVerificacao();
-				Evento eventoAux = empresa.getEvento(indexEvento);
-				
-				mostrarMenuEventos();
-				int case2Entrada = Utilitarios.lerInteiroComVerificacao();
-				
-				if(case2Entrada == 1) {
-					System.out.println("Das tarefas do sistema, qualo id da que você deseja cadastrar ao evento?");
-					listarTarefas(main);
+				if(!empresa.eventosIsEmpty()) {
 					
-					int idTarefa = Utilitarios.lerInteiroComVerificacao();
+					System.out.println("Selecione o id do evento que deseja entrar");
+					empresa.listarEventos();
+					int indexEvento = Utilitarios.lerInteiroComVerificacao();
 					
-					Tarefa tarefaAux = main.tarefasDB.get(idTarefa);
-					eventoAux.cadastrarTarefa(tarefaAux);
+					Evento eventoAux = empresa.getEvento(indexEvento);
+					if(eventoAux != null){	
+						mostrarMenuEventos();
+						int case2Entrada = Utilitarios.lerInteiroComVerificacao();
+						
+						if(case2Entrada == 1) {
+							if(main.tarefasDB.isEmpty()) {
+								System.out.println("Nenhuma tarefa cadastrada no sistema para listar");
+							}else {
+								System.out.println("Das tarefas do sistema, qualo id da que você deseja cadastrar ao evento?");
+								listarTarefas(main);
+								
+								int idTarefa = Utilitarios.lerInteiroComVerificacao();
+								
+								Tarefa tarefaAux = main.tarefasDB.get(idTarefa-1);
+								eventoAux.cadastrarTarefa(tarefaAux);
+								System.out.println("Tarefas de " + eventoAux.getNome());
+								eventoAux.listarTarefas();
+							}
+						}
+						else if(case2Entrada == 2) {
+							System.out.println("Retornando ao menu principal");
+	
+						}
+					}
 				}
-				else if(case2Entrada == 2) {
-					System.out.println("Retornando ao menu principal");
-
+				else{
+					System.out.println("Não tem eventos cadastrados na empresa");
 				}
-			}	
-			
-			else if(intEntrada == 6) {
-				System.out.println("Em construção");
 			}
 			
-			else if(intEntrada == 7) {
+			
+			else if(intEntrada == 6) {
 			    System.out.println("---------------------------------------------");
 			    System.out.println("RELATÓRIOS\n1 - Relatório de Evento\n2 - Execuções por Período\n3 - Recursos de uma Tarefa\n0 - Voltar");
 			    int escolhaRel = Utilitarios.lerInteiroComVerificacao();
@@ -850,6 +916,10 @@ public class Main {
 			        empresa.gerarRelatorioRecursosTarefa(idTarefa);
 			    }
 			}
+			
+			
+			
+			
 			
 			else if(intEntrada == 0) {
 				System.out.println("Saindo...");
