@@ -54,7 +54,7 @@ public class Main {
 	    System.out.println("---------------------------------------------");
 	    System.out.println("MENU de Colaboradores");
 	    System.out.println("1 - Cadastrar Colaborador");
-	    System.out.println("2 - Listar Colaboradores por nome");
+	    System.out.println("2 - Consultar Colaboradores por nome");
 	    System.out.println("3 - Consultar Colaborador por ID");
 	    System.out.println("4 - Excluir Colaborador");
 	    System.out.println("5 - Alterar Colaborador");
