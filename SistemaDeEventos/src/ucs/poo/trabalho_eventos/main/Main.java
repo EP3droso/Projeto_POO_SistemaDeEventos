@@ -758,6 +758,7 @@ public class Main {
 				}
 			}
 			
+			    
 			else if(intEntrada == 2) {
 				mostrarMenuColaboradores();
 			    int escolhaColab = Utilitarios.lerInteiroComVerificacao();
@@ -788,83 +789,51 @@ public class Main {
 
 				    }
 			    }
-			}
 			    
-			    else if(intEntrada == 2) {
-					mostrarMenuColaboradores();
-				    int escolhaColab = Utilitarios.lerInteiroComVerificacao();
-				    if(escolhaColab == 1) {
-				    	try {
-
-					        System.out.println("Insira o nome do colaborador:");
-					        String nome = sc.nextLine();
-
-					        System.out.println("Insira o email do colaborador:");
-					        String email = sc.nextLine();
-
-					        System.out.println("Insira a senha do colaborador:");
-					        String senha = sc.nextLine();
-
-					        System.out.println("Insira a função do colaborador:");
-					        String funcao = sc.nextLine();
-					        
-					        Colaborador colaboradorAux = new Colaborador(nome, email, senha, funcao);
-					        empresa.cadastrarColaborador(colaboradorAux);
-
-					        System.out.println("Colaborador cadastrado com sucesso!");
-
-					    }
-					    catch (IllegalArgumentException e) {
-
-					        System.out.println("ERRO: " + e.getMessage());
-
-					    }
-				    }
-				    
-				    else if(escolhaColab == 2) {
-				        empresa.mostrarColaboradores();
-				        System.out.println("Informe o nome do colaborador:");
-				        String nome = sc.nextLine();
-				        empresa.buscarColaboradorPorNome(nome);
-				    }
-				    
-				    else if(escolhaColab == 3) {
-				        empresa.mostrarColaboradores();
-				        System.out.println("Informe o ID do colaborador:");
-				        int id = Utilitarios.lerInteiroComVerificacao();
-				        Colaborador colaborador = empresa.getColaborador(id);
-				        if(colaborador == null) {
-				            System.out.println("Colaborador não encontrado.");
-				        }
-				        else {
-				            System.out.println(colaborador);
-				        }
-				    }
-				    
-				    else if(escolhaColab == 4) {
-				        empresa.mostrarColaboradores();
-				        System.out.println("Informe o ID do colaborador:");
-				        int id = Utilitarios.lerInteiroComVerificacao();
-				        empresa.excluirColaborador(id);
-				    }
-				    
-				    else if(escolhaColab == 5) {
-				        empresa.mostrarColaboradores();
-				        System.out.println("Informe o ID do colaborador:");
-				        int id = Utilitarios.lerInteiroComVerificacao();
-				        sc.nextLine();
-				        System.out.println("Novo nome do colaborador:");
-				        String novoNome = sc.nextLine();
-				        System.out.println("Novo email do colaborador:");
-				        String novoEmail = sc.nextLine();
-				        System.out.println("Nova senha do colaborador:");
-				        String novaSenha = sc.nextLine();
-				        System.out.println("Nova função do colaborador:");
-				        String novaFuncao = sc.nextLine();
-				        empresa.alterarColaborador(id, novoNome, novoEmail, novaSenha, novaFuncao);
-				    }
-				  
-				}		
+			    else if(escolhaColab == 2) {
+			        empresa.mostrarColaboradores();
+			        System.out.println("Informe o nome do colaborador:");
+			        String nome = sc.nextLine();
+			        empresa.buscarColaboradorPorNome(nome);
+			    }
+			    
+			    else if(escolhaColab == 3) {
+			        empresa.mostrarColaboradores();
+			        System.out.println("Informe o ID do colaborador:");
+			        int id = Utilitarios.lerInteiroComVerificacao();
+			        Colaborador colaborador = empresa.getColaborador(id);
+			        if(colaborador == null) {
+			            System.out.println("Colaborador não encontrado.");
+			        }
+			        else {
+			            System.out.println(colaborador);
+			        }
+			    }
+			    
+			    else if(escolhaColab == 4) {
+			        empresa.mostrarColaboradores();
+			        System.out.println("Informe o ID do colaborador:");
+			        int id = Utilitarios.lerInteiroComVerificacao();
+			        empresa.excluirColaborador(id);
+			    }
+			    
+			    else if(escolhaColab == 5) {
+			        empresa.mostrarColaboradores();
+			        System.out.println("Informe o ID do colaborador:");
+			        int id = Utilitarios.lerInteiroComVerificacao();
+			        sc.nextLine();
+			        System.out.println("Novo nome do colaborador:");
+			        String novoNome = sc.nextLine();
+			        System.out.println("Novo email do colaborador:");
+			        String novoEmail = sc.nextLine();
+			        System.out.println("Nova senha do colaborador:");
+			        String novaSenha = sc.nextLine();
+			        System.out.println("Nova função do colaborador:");
+			        String novaFuncao = sc.nextLine();
+			        empresa.alterarColaborador(id, novoNome, novoEmail, novaSenha, novaFuncao);
+			    }
+			  
+			}		
 			
 			else if(intEntrada == 3) {
 				int escolha=10;
