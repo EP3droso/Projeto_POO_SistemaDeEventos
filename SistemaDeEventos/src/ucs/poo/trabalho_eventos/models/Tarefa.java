@@ -82,7 +82,6 @@ public class Tarefa {
 	public void registrarRecursos(List<Recurso> recursosDisponiveis) {
 	    Scanner sc = new Scanner(System.in);
 	    boolean loop = true;
-	    
 	    while(loop) {
 	        System.out.println("\nDigite o ID do Recurso a ser utilizado, ou 0 para parar: ");
 	        for(Recurso r1 : recursosDisponiveis) {
@@ -151,7 +150,6 @@ public class Tarefa {
 	        recursosTarefas.add(new RecursoTarefa(recursoAux, this));
 	        System.out.println("Recurso " + recursoEncontrado.getNome() + " adicionado com sucesso à tarefa!");
 	    }
-	    sc.close();
 	}
 	
 
