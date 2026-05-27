@@ -77,14 +77,43 @@ public class Main {
 	
 	
 	private static void listarTarefas(Main main) {
-		System.out.println("\n---------------------------------------------");
-		System.out.println("Lista de Tarefas: ");
+	System.out.println("\n---------------------------------------------");
+	System.out.println("Lista de Tarefas: ");
 		for(Tarefa tarefa : main.tarefasDB) {
-			System.out.println((main.tarefasDB.indexOf(tarefa) + 1)+ " - " + tarefa.getNome());
+			System.out.println(("ID - " + main.tarefasDB.indexOf(tarefa))+ " - " + tarefa.getNome());
 		}
 		System.out.println("\n");
 	}
-	
+
+	private static void listarTarefa(Main main, String nomeTarefa){
+		System.out.println("\n---------------------------------------------");
+		boolean achou = false;
+		for(Tarefa tarefa : main.tarefasDB) {
+			if(tarefa.getNome().equalsIgnoreCase(nomeTarefa)) {
+				System.out.println(tarefa.getNome() + " - " + tarefa.getPreRequesitos() + " - " + tarefa.getRecursos() );
+				achou = true;
+			}
+		}
+		if(!achou)
+			System.out.println("Tarefa não cadastrada, ou não encontrada");
+		System.out.println("\n");
+}
+
+
+	private static void listarTarefa(Main main, int idTarefa){
+		System.out.println("\n---------------------------------------------");
+		boolean achou = false;
+		for(Tarefa tarefa : main.tarefasDB) {
+			if(main.tarefasDB.indexOf(tarefa) == idTarefa ) {
+				System.out.println(tarefa.getNome() + " - " + tarefa.getPreRequesitos() + " - " + tarefa.getRecursos() );
+				achou = true;
+			}
+		}
+		if(!achou)
+			System.out.println("ID não cadastrado, ou não encontrado");
+		System.out.println("\n");
+	}
+
 	public static void adicionarTarefa(Main main) {
 		Scanner sc = new Scanner(System.in);
 		boolean loop = true;
@@ -290,7 +319,6 @@ public class Main {
 	    System.out.println("\nExecução da tarefa '" + tarefaAlvo.getNome() + "' registrada com sucesso!");
 	}
 
-	
 	public static void alterarTarefa(Main main) {
 	    Scanner sc = new Scanner(System.in);
 	    
@@ -837,9 +865,9 @@ public class Main {
 			
 			else if(intEntrada == 3) {
 				int escolha=10;
-				while(escolha<0 || escolha>=7) {
+				while(escolha<0 || escolha>=9) {
 					System.out.println("\n---------------------------------------------");
-					System.out.println("CONTROLE de Tarefas\n0 - Voltar ao Menu\n1 - Adicionar Nova Tarefa\n2 - Alterar infos de Tarefa especifica\n3 - Listar Tarefas\n4 - Registrar Execucao Tarefa\n5 - Registrar Recursos\n6 - Apagar Tarefas");
+					System.out.println("CONTROLE de Tarefas\n0 - Voltar ao Menu\n1 - Adicionar Nova Tarefa\n2 - Alterar infos de Tarefa especifica\n3 - Listar Tarefas\n4 - Registrar Execucao Tarefa\n5 - Registrar Recursos\n6 - Listar Tarefas por nome\n7 - Listar Tarefas por ID\n8 - Apagar Tarefas");
 					escolha = Utilitarios.lerInteiroComVerificacao();
 				}
 				if(escolha==1) {
@@ -868,12 +896,33 @@ public class Main {
 				}
 				else if(escolha==6) {
 					if(main.tarefasDB.isEmpty())
+						System.out.println("Nenhuma tarefa cadastrada no sistema para listar");
+					else {
+						String nomeRecurso;
+						System.out.println("Nome da Tarefa: ");
+						String nomeTarefa= sc.nextLine();
+						listarTarefa(main,nomeTarefa);
+					}
+				
+				}
+				else if(escolha==7) {
+					if(main.tarefasDB.isEmpty())
+						System.out.println("Nenhuma tarefa cadastrada no sistema para listar");
+					else{
+						int id;
+						System.out.println("ID: ");
+						id = Utilitarios.lerInteiroComVerificacao();
+						listarTarefa(main,id);
+					}
+				}
+				else if(escolha==8) {
+					if(main.tarefasDB.isEmpty())
 						System.out.println("Nenhuma tarefa cadastrada no sistema para deletar");
 					else
 						excluirTarefa(main);
 				}
 			}
-			
+
 			else if(intEntrada == 4) {
 				int escolha=10;
 				while(escolha<0 || escolha>=7) {

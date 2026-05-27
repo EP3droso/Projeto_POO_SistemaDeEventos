@@ -200,10 +200,10 @@ public class Tarefa {
 	@Override
 	public String toString() {
 		if(preRequesitos.isEmpty()) {
-			return "Tarefa= " + nome + "\nPré-Requesitos= 0 \nRecursos Usados =" + this.getRecursos();
+			return "Tarefa= " + nome + "Pré-Requesitos= 0 Recursos Usados =" + this.getRecursos();
 		}
 		else {
-			return "Tarefa= " + nome + "\nPré-Requesitos= " + preRequesitos + "\nRecursosTarefas=" + recursosTarefas + "]";
+			return "Tarefa= " + nome + "Pré-Requesitos= " + preRequesitos + "RecursosTarefas=" + recursosTarefas + "]";
 		}
 	}
 	@Override
