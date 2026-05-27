@@ -51,9 +51,35 @@ public class Empresa implements Relatorio {
 			return null;
 		}
 	}
-
-
 	
+	public Evento getEvento(String nome){
+		
+		for(Evento aux : this.eventos) {
+			if(nome.equals(aux.getNome())) {
+				return aux;
+			}
+		}
+		
+		System.out.println("Não existe um evento com esse ID");
+		return null;
+		
+	}
+	
+	
+	public void excluirEvento(int id) {
+		Evento eventoAux = this.getEvento(id);
+		if(eventoAux != null) {
+			this.eventos.remove(eventoAux);
+		}
+	}
+	
+
+	public void alterarEvento(int id, String nome) {
+		Evento eventoAux = this.getEvento(id);
+		if(eventoAux != null) {
+			eventoAux.setNome(nome);
+		}
+	}
 	
 
     public void cadastrarColaborador(Colaborador colaborador) {
@@ -75,6 +101,16 @@ public class Empresa implements Relatorio {
     public Colaborador getColaborador(int id) {
         for(Colaborador colaborador : colaboradores) {
             if(colaborador.getId() == id) {
+                return colaborador;
+            }
+        }
+
+        return null;
+    }
+    
+    public Colaborador getColaborador(String nome) {
+        for(Colaborador colaborador : colaboradores) {
+            if(nome.equals(colaborador.getNome())) {
                 return colaborador;
             }
         }
