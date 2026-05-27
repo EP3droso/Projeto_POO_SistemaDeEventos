@@ -3,6 +3,7 @@ package ucs.poo.trabalho_eventos.main;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Date;
 
 import ucs.poo.trabalho_eventos.models.Colaborador;
 import ucs.poo.trabalho_eventos.models.Empresa;
@@ -21,6 +22,7 @@ public class Main {
 	public List<Recurso> recursosDB = new ArrayList<>();
 	
 	
+	
 	private String getNomeEmpresa() {
 		return nomeEmpresa;
 	}
@@ -30,10 +32,9 @@ public class Main {
 	}
 	
 	private static void mostrarMenuPrincipal(Main main) {
-		System.out.println("---------------------------------------------");
 		System.out.println("MENU de " + main.getNomeEmpresa());
 		System.out.println("1 - Cadastro de Evento");
-		System.out.println("2 - Cadastro de Colaboradores");
+		System.out.println("2 - Menu de Colaboradores");
 		System.out.println("3 - Controle de Tarefas");
 		System.out.println("4 - Controle de Recursos");
 		System.out.println("5 - Menu de Eventos");
@@ -43,10 +44,22 @@ public class Main {
 	
 	
 	private static void mostrarMenuEventos(){
+		System.out.println("---------------------------------------------");
 		System.out.println("MENU de Eventos");
 		System.out.println("1 - Cadastro de Tarefa no Evento");
 		System.out.println("0 - Sair");
 	}
+	
+	private static void mostrarMenuColaboradores() {
+	    System.out.println("---------------------------------------------");
+	    System.out.println("MENU de Colaboradores");
+	    System.out.println("1 - Cadastrar Colaborador");
+	    System.out.println("2 - Listar Colaboradores");
+	    System.out.println("3 - Consultar Colaborador por ID");
+	    System.out.println("4 - Excluir Colaborador");
+	    System.out.println("0 - Voltar");
+	}
+	
 
 	
 	private static void login(Main main) {
@@ -158,7 +171,7 @@ public class Main {
 	    }
 	}
 	
-	public static void registrarTarefas(Main main) {
+	public static void registrarTarefas(Main main, Empresa empresa) {
 	    Scanner sc = new Scanner(System.in);
 	    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
 	    sdf.setLenient(false);
@@ -181,7 +194,20 @@ public class Main {
 	        System.out.println("Tarefa não encontrada!");
 	        return;
 	    }
-	
+	    
+	    System.out.println("\nCOLABORADORES CADASTRADOS:");
+	    empresa.listarColaboradores();
+
+	    System.out.print("Digite o ID do colaborador responsável: ");
+	    int idColaborador = Utilitarios.lerInteiroComVerificacao();
+
+	    Colaborador colaborador = empresa.getColaborador(idColaborador);
+
+	    if (tarefaAlvo.getRecursosTarefas().isEmpty()) {
+	        System.out.println("Aviso: Esta tarefa não possui recursos vinculados, mas o horário será registrado nos metadados.");
+	    }
+
+
 	    java.util.Date dataInicio = null;
 	    java.util.Date dataFim = null;
 	
@@ -213,6 +239,10 @@ public class Main {
 	        rt.setHoraIni(dataInicio);
 	        rt.setHoraFim(dataFim);
 	    }
+
+	    
+	    tarefaAlvo.registrarExecucaoTarefa(colaborador, dataInicio, dataFim);
+	    
 	
 	    if (!tarefaAlvo.getRecursosTarefas().isEmpty()) {
 	        System.out.println("\n--- AJUSTE FINAL DE RECURSOS UTILIZADOS ---");
@@ -256,6 +286,7 @@ public class Main {
 	        }
 	    }
 	
+
 	    System.out.println("\nExecução da tarefa '" + tarefaAlvo.getNome() + "' registrada com sucesso!");
 	}
 
@@ -683,20 +714,60 @@ public class Main {
 			}
 			
 			else if(intEntrada == 2) {
-				System.out.println("Insira o nome do colaborador:");
-				String nome = sc.nextLine();
-				
-				System.out.println("Insira o email do colaborador:");
-				String email = sc.nextLine();
-				
-				System.out.println("Insira o senha do colaborador:");
-				String senha = sc.nextLine();
-				
-				System.out.println("Insira o funcao do colaborador:");
-				String funcao = sc.nextLine();
-				
-				Colaborador colaboradorAux = new Colaborador();
-				empresa.cadastrarColaboradores(colaboradorAux);
+				mostrarMenuColaboradores();
+			    int escolhaColab = Utilitarios.lerInteiroComVerificacao();
+			    if(escolhaColab == 1) {
+			    	try {
+
+				        System.out.println("Insira o nome do colaborador:");
+				        String nome = sc.nextLine();
+
+				        System.out.println("Insira o email do colaborador:");
+				        String email = sc.nextLine();
+
+				        System.out.println("Insira a senha do colaborador:");
+				        String senha = sc.nextLine();
+
+				        System.out.println("Insira a função do colaborador:");
+				        String funcao = sc.nextLine();
+				        
+				        Colaborador colaboradorAux = new Colaborador(nome, email, senha, funcao);
+				        empresa.cadastrarColaborador(colaboradorAux);
+
+				        System.out.println("Colaborador cadastrado com sucesso!");
+
+				    }
+				    catch (IllegalArgumentException e) {
+
+				        System.out.println("ERRO: " + e.getMessage());
+
+				    }
+			    }
+			    
+			    else if(escolhaColab == 2) {
+			    	empresa.listarColaboradores();
+			    }
+			    
+			    else if(escolhaColab == 3) {
+			    	System.out.println("Informe o ID do colaborador:");
+			    	int id = Utilitarios.lerInteiroComVerificacao();
+			    	Colaborador colaborador = empresa.getColaborador(id);
+			    	
+			    	if(colaborador == null) {
+			    	    System.out.println("Colaborador não encontrado.");
+			    	}
+			    	else {
+			    	    System.out.println(colaborador);
+			    	}
+			    }
+			    
+			    else if(escolhaColab == 4) {
+			    	System.out.println("Informe o ID do colaborador:");
+			    	int id = Utilitarios.lerInteiroComVerificacao();
+			    	empresa.excluirColaborador(id);
+
+
+			    }
 			}	
 			
 			else if(intEntrada == 3) {
@@ -722,7 +793,7 @@ public class Main {
 					if(main.tarefasDB.isEmpty())
 						System.out.println("Nenhuma tarefa cadastrada no sistema para listar");
 					else
-						registrarTarefas(main);
+						registrarTarefas(main, empresa);
 				}
 				else if(escolha==5) {
 					if(main.tarefasDB.isEmpty())
@@ -815,10 +886,36 @@ public class Main {
 				}
 			}
 			
-			else if(intEntrada == 6) {
-				System.out.println("Em construção");
-			}
 			
+			else if(intEntrada == 6) {
+			    System.out.println("---------------------------------------------");
+			    System.out.println("RELATÓRIOS\n1 - Relatório de Evento\n2 - Execuções por Período\n3 - Recursos de uma Tarefa\n0 - Voltar");
+			    int escolhaRel = Utilitarios.lerInteiroComVerificacao();
+
+			    if(escolhaRel == 1) {
+			        empresa.listarEventos();
+			        System.out.println("Informe o ID do evento:");
+			        int idEvento = Utilitarios.lerInteiroComVerificacao();
+			        empresa.gerarRelatorioEvento(idEvento);
+			    }
+			    else if(escolhaRel == 2) {
+			        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
+			        try {
+			            System.out.println("Data início (dd/MM/yyyy HH:mm):");
+			            Date inicio = sdf.parse(sc.nextLine());
+			            System.out.println("Data fim (dd/MM/yyyy HH:mm):");
+			            Date fim = sdf.parse(sc.nextLine());
+			            empresa.gerarRelatorioPeriodo(inicio, fim);
+			        } catch(Exception e) {
+			            System.out.println("Data inválida.");
+			        }
+			    }
+			    else if(escolhaRel == 3) {
+			        System.out.println("Informe o ID da tarefa:");
+			        int idTarefa = Utilitarios.lerInteiroComVerificacao();
+			        empresa.gerarRelatorioRecursosTarefa(idTarefa);
+			    }
+			}
 			
 			
 			
