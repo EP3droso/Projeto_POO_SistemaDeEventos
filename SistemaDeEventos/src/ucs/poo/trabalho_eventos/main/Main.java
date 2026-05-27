@@ -399,7 +399,6 @@ public class Main {
 	        while (loopAdicionar) {
 	            java.util.List<Tarefa> disponiveis = new java.util.ArrayList<>();
 	            for (Tarefa t1 : main.tarefasDB) {
-	                // CORRIGIDO AQUI: Usa 'tarefaAlvo' e valida o ciclo recursivo corretamente
 	                if (!t1.equals(tarefaAlvo) && !tarefaAlvo.getPreRequesitos().contains(t1) && !tarefaAlvo.verificaCiclo(t1, tarefaAlvo)) {
 	                    disponiveis.add(t1);
 	                }
@@ -667,6 +666,52 @@ public class Main {
 			}
 		}
 	}	    	    
+	
+	public static void excluirTarefa(Main main) {
+	    Scanner sc = new Scanner(System.in);
+	    
+	    if (main.tarefasDB.isEmpty()) {
+	        System.out.println("Nenhuma Tarefa cadastrada no sistema para Excluir.");
+	        return;
+	    }
+	    
+	    listarTarefas(main);
+	    System.out.println("Nome da tarefa a ser Removida: ");
+	    String nomeTarefa = sc.nextLine();
+	    
+	    Tarefa tarefaParaRemover = null;
+	    for (Tarefa t : main.tarefasDB) {
+	        if (t.getNome().equalsIgnoreCase(nomeTarefa)) {
+	            tarefaParaRemover = t;
+	            break;
+	        }
+	    }
+	    
+	    if (tarefaParaRemover == null) {
+	        System.out.println("Tarefa não encontrada!");
+	        return;
+	    }
+	    
+	    for (RecursoTarefa rt : tarefaParaRemover.getRecursosTarefas()) {
+	        Recurso recursoAlocado = rt.getRecurso();
+	        
+	        for (Recurso recursoGlobal : main.recursosDB) {
+	            if (recursoGlobal.getId() == recursoAlocado.getId()) {
+	                recursoGlobal.atualizarQuantidade(-recursoAlocado.getQuantidade());
+	                break;
+	            }
+	        }
+	    }
+	    
+	    for (Tarefa t : main.tarefasDB) {
+	        if (!t.equals(tarefaParaRemover)) {
+	            t.getPreRequesitos().remove(tarefaParaRemover);
+	        }
+	    }
+	    
+	    main.tarefasDB.remove(tarefaParaRemover);
+	    System.out.println("Tarefa '" + tarefaParaRemover.getNome() + "' excluída com sucesso! Recursos devolvidos ao estoque e dependências atualizadas.");
+	}
 
 	
 	
@@ -772,9 +817,9 @@ public class Main {
 			
 			else if(intEntrada == 3) {
 				int escolha=10;
-				while(escolha<0 || escolha>=6) {
+				while(escolha<0 || escolha>=7) {
 					System.out.println("\n---------------------------------------------");
-					System.out.println("CONTROLE de Tarefas\n0 - Voltar ao Menu\n1 - Adicionar Nova Tarefa\n2 - Alterar infos de Tarefa especifica\n3 - Listar Tarefas\n4 - Registrar Execucao Tarefa\n5 - Registrar Recursos");
+					System.out.println("CONTROLE de Tarefas\n0 - Voltar ao Menu\n1 - Adicionar Nova Tarefa\n2 - Alterar infos de Tarefa especifica\n3 - Listar Tarefas\n4 - Registrar Execucao Tarefa\n5 - Registrar Recursos\n6 - Apagar Tarefas");
 					escolha = Utilitarios.lerInteiroComVerificacao();
 				}
 				if(escolha==1) {
@@ -800,6 +845,12 @@ public class Main {
 						System.out.println("Nenhuma tarefa cadastrada no sistema para listar");
 					else
 						registrarRecursos(main);
+				}
+				else if(escolha==6) {
+					if(main.tarefasDB.isEmpty())
+						System.out.println("Nenhuma tarefa cadastrada no sistema para deletar");
+					else
+						excluirTarefa(main);
 				}
 			}
 			
