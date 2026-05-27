@@ -12,7 +12,7 @@ public abstract class Evento {
 	
 	public Evento(String nome){
 		this.nome = nome;
-		tarefas = new ArrayList<>();
+		this.tarefas = new ArrayList<>();
 	}
 	
 	public void eventoSendoCadastrado(int index){
@@ -20,7 +20,7 @@ public abstract class Evento {
 	}
 	
 	public void acompanharAndamento() {
-		int tam = tarefas.size(), tarRealizadas = 0;
+		int tam = this.tarefas.size(), tarRealizadas = 0;
 		/*
 		for(Tarefa tarefa : tarefas) {
 			if(tarefa.getColaboradorTarefa() != null ) {
@@ -44,7 +44,13 @@ public abstract class Evento {
 	
 	
 	public void cadastrarTarefa(Tarefa tarefa) {
-		tarefas.add(tarefa);
+		this.tarefas.add(tarefa);
+	}
+	
+	public void listarTarefas() {
+		for(Tarefa aux : this.tarefas) {
+			System.out.println((tarefas.indexOf(aux) + 1)+ " - " + aux.getNome());
+		}
 	}
 	
 	public int getId() {

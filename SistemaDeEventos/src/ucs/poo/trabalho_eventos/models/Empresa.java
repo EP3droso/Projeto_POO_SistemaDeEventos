@@ -38,7 +38,13 @@ public class Empresa {
 	}
 	
 	public Evento getEvento(int id){
+		try {
 		return this.eventos.get(id);
+		}
+		catch(IndexOutOfBoundsException e) {
+			System.out.println("Não existe um evento com esse ID");
+			return null;
+		}
 	}
 	
 	

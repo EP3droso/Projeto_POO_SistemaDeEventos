@@ -736,24 +736,31 @@ public class Main {
 					System.out.println("Selecione o id do evento que deseja entrar");
 					empresa.listarEventos();
 					int indexEvento = Utilitarios.lerInteiroComVerificacao();
+					
 					Evento eventoAux = empresa.getEvento(indexEvento);
-					
-					mostrarMenuEventos();
-					int case2Entrada = Utilitarios.lerInteiroComVerificacao();
-					
-					if(case2Entrada == 1) {
-						System.out.println("Das tarefas do sistema, qualo id da que você deseja cadastrar ao evento?");
-						listarTarefas(main);
+					if(eventoAux != null){	
+						mostrarMenuEventos();
+						int case2Entrada = Utilitarios.lerInteiroComVerificacao();
 						
-						int idTarefa = Utilitarios.lerInteiroComVerificacao();
-						
-						Tarefa tarefaAux = main.tarefasDB.get(idTarefa);
-						eventoAux.cadastrarTarefa(tarefaAux);
-				
-					}
-					else if(case2Entrada == 2) {
-						System.out.println("Retornando ao menu principal");
-
+						if(case2Entrada == 1) {
+							if(main.tarefasDB.isEmpty()) {
+								System.out.println("Nenhuma tarefa cadastrada no sistema para listar");
+							}else {
+								System.out.println("Das tarefas do sistema, qualo id da que você deseja cadastrar ao evento?");
+								listarTarefas(main);
+								
+								int idTarefa = Utilitarios.lerInteiroComVerificacao();
+								
+								Tarefa tarefaAux = main.tarefasDB.get(idTarefa-1);
+								eventoAux.cadastrarTarefa(tarefaAux);
+								System.out.println("Tarefas de " + eventoAux.getNome());
+								eventoAux.listarTarefas();
+							}
+						}
+						else if(case2Entrada == 2) {
+							System.out.println("Retornando ao menu principal");
+	
+						}
 					}
 				}
 				else{
@@ -764,6 +771,10 @@ public class Main {
 			else if(intEntrada == 6) {
 				System.out.println("Em construção");
 			}
+			
+			
+			
+			
 			
 			
 			else if(intEntrada == 0) {
