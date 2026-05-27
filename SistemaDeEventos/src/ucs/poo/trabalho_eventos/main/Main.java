@@ -47,6 +47,9 @@ public class Main {
 		System.out.println("---------------------------------------------");
 		System.out.println("MENU de Eventos");
 		System.out.println("1 - Cadastro de Tarefa no Evento");
+		System.out.println("2 - Exclusao de Evento");
+		System.out.println("3 - Alterar nome do Evento");
+		System.out.println("4 - Excluir Tarefa no Evento");
 		System.out.println("0 - Sair");
 	}
 	
@@ -59,6 +62,8 @@ public class Main {
 	    System.out.println("4 - Excluir Colaborador");
 	    System.out.println("5 - Alterar Colaborador");
 	}
+	
+	
 	
 
 	
@@ -996,6 +1001,33 @@ public class Main {
 							}
 						}
 						else if(case2Entrada == 2) {
+							empresa.excluirEvento(eventoAux.getId());
+	
+						}
+						else if(case2Entrada == 3){
+							System.out.println("Digite o novo nome do evento");
+							String nomeAux = sc.nextLine();
+							empresa.alterarEvento(eventoAux.getId(),nomeAux);
+						}
+						else if(case2Entrada == 4){
+							if(eventoAux.getTarefas().isEmpty()) {
+								System.out.println("Nenhuma tarefa cadastrada no evento para listar");
+							}else {
+								System.out.println("Qual o id do evento a ser excluído?");
+								listarTarefas(main);
+								
+								int idTarefa = Utilitarios.lerInteiroComVerificacao();
+								if(eventoAux.getTarefa(idTarefa) != null){
+									eventoAux.excluirTarefa(idTarefa-1);
+									System.out.println("Tarefas de " + eventoAux.getNome());
+									eventoAux.listarTarefas();
+								}
+								else{
+									System.out.println("Esse id de tarefa não existe no Evento");
+								}
+							}
+						}
+						else if(case2Entrada == 0) {
 							System.out.println("Retornando ao menu principal");
 	
 						}
