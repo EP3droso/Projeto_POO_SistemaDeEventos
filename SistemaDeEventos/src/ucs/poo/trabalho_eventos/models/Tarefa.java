@@ -2,7 +2,6 @@ package ucs.poo.trabalho_eventos.models;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Scanner;
 
 import ucs.poo.trabalho_eventos.main.Utilitarios;
 
@@ -80,12 +79,11 @@ public class Tarefa {
 	}
 	
 	public void registrarRecursos(List<Recurso> recursosDisponiveis) {
-	    Scanner sc = new Scanner(System.in);
 	    boolean loop = true;
 	    while(loop) {
-	        System.out.println("\nDigite o ID do Recurso a ser utilizado, ou 0 para parar: ");
+	        System.out.println("\nDigite o ID do Recurso a ser utilizado/modificado, ou 0 para parar: ");
 	        for(Recurso r1 : recursosDisponiveis) {
-	            System.out.println(r1.getId() + ": " + r1.getNome() + " (Disponível: " + r1.getQuantidade() + ")");
+	            System.out.println(r1.getId() + ": " + r1.getNome() + " (Em Estoque: " + r1.getQuantidade() + ")");
 	        }
 	        
 	        int id = Utilitarios.lerInteiroComVerificacao();
@@ -94,64 +92,84 @@ public class Tarefa {
 	            break;
 	        }
 	        
-	        Recurso recursoEncontrado = null;
+	        Recurso recursoGlobal = null;
 	        for(Recurso r1 : recursosDisponiveis) {
 	            if(r1.getId() == id) {
-	                recursoEncontrado = r1;
+	                recursoGlobal = r1;
 	                break;
 	            }
 	        }
 	        
-	        if(recursoEncontrado == null) {
+	        if(recursoGlobal == null) {
 	            System.out.println("Id inserido é inválido!");
 	            continue;
 	        }
 	        
-	        boolean jaAdicionado = false;
+	        RecursoTarefa vinculoExistente = null;
 	        for(RecursoTarefa rt : recursosTarefas) {
-	            if(rt.getRecurso().getId() == recursoEncontrado.getId()) {
-	                jaAdicionado = true;
+	            if(rt.getRecurso().getId() == recursoGlobal.getId()) {
+	                vinculoExistente = rt;
 	                break;
 	            }
 	        }
 	        
-	        if(jaAdicionado) {
-	            System.out.println("Erro: O recurso '" + recursoEncontrado.getNome() + "' já foi adicionado a esta tarefa!");
-	            continue;
-	        }
-	        
-	        if(recursoEncontrado.getQuantidade() <= 0) {
-	            System.out.println("Erro: Não há estoque disponível para o recurso '" + recursoEncontrado.getNome() + "'.");
-	            continue;
-	        }
-	        
-	        boolean quantidadeValida = false;
-	        int quantidade = 0;
-	        
-	        while(!quantidadeValida) {
-	            System.out.println("Quantidade de Recurso '" + recursoEncontrado.getNome() + "' a ser usado (máx de: " + recursoEncontrado.getQuantidade() + "): ");
-	            quantidade = Utilitarios.lerInteiroComVerificacao();
+	        if(vinculoExistente != null) {
+	            int qtdAlocadaAtual = vinculoExistente.getRecurso().getQuantidade();
+	            System.out.println("Este recurso já está nesta tarefa. Quantidade alocada atual: " + qtdAlocadaAtual);
+	            System.out.println("Digite a NOVA quantidade total desejada para esta tarefa (Digite 0 para remover e devolver tudo):");
+	            int novaQtdTarefa = Utilitarios.lerInteiroComVerificacao();
 	            
-	            if(quantidade > recursoEncontrado.getQuantidade() || quantidade <= 0) {
-	                System.out.println("Quantidade inválida! Tente novamente.");
-	            } else {
-	                quantidadeValida = true;
+	            if(novaQtdTarefa < 0) {
+	                System.out.println("Quantidade inválida!");
+	                continue;
 	            }
+	            
+	            int diferenca = novaQtdTarefa - qtdAlocadaAtual;
+	            
+	            if(diferenca > recursoGlobal.getQuantidade()) {
+	                System.out.println("Erro: Estoque insuficiente! Você precisa de mais " + (diferenca - recursoGlobal.getQuantidade()) + " unidades.");
+	                continue;
+	            }
+	            
+	            recursoGlobal.atualizarQuantidade(diferenca);
+	            
+	            if(novaQtdTarefa == 0) {
+	                recursosTarefas.remove(vinculoExistente);
+	                System.out.println("Recurso removido da tarefa e totalmente devolvido ao estoque.");
+	            } else {
+	                vinculoExistente.getRecurso().setQuantidade(novaQtdTarefa);
+	                System.out.println("Quantidade atualizada com sucesso na tarefa!");
+	            }
+	            
+	        } else {
+	            if(recursoGlobal.getQuantidade() <= 0) {
+	                System.out.println("Erro: Não há estoque disponível para o recurso '" + recursoGlobal.getNome() + "'.");
+	                continue;
+	            }
+	            
+	            boolean quantidadeValida = false;
+	            int quantidade = 0;
+	            
+	            while(!quantidadeValida) {
+	                System.out.println("Quantidade de Recurso '" + recursoGlobal.getNome() + "' a ser usado (máx de: " + recursoGlobal.getQuantidade() + "): ");
+	                quantidade = Utilitarios.lerInteiroComVerificacao();
+	                
+	                if(quantidade > recursoGlobal.getQuantidade() || quantidade <= 0) {
+	                    System.out.println("Quantidade inválida! Tente novamente.");
+	                } else {
+	                    quantidadeValida = true;
+	                }
+	            }
+	            
+	            recursoGlobal.atualizarQuantidade(quantidade);
+	            
+	            Recurso recursoAux = new Recurso(recursoGlobal.getId(), recursoGlobal.getNome(), recursoGlobal.getTipo(), quantidade);
+	            recursosTarefas.add(new RecursoTarefa(recursoAux, this));
+	            System.out.println("Recurso " + recursoGlobal.getNome() + " adicionado com sucesso à tarefa!");
 	        }
-	        
-	        recursoEncontrado.atualizarQuantidade(quantidade);
-	        
-	        Recurso recursoAux = new Recurso();
-	        recursoAux.setId(recursoEncontrado.getId());
-	        recursoAux.setNome(recursoEncontrado.getNome());
-	        recursoAux.setQuantidade(quantidade); // Guarda a quantidade alocada, não o saldo do estoque
-	        recursoAux.setTipo(recursoEncontrado.getTipo());
-	        
-	        recursosTarefas.add(new RecursoTarefa(recursoAux, this));
-	        System.out.println("Recurso " + recursoEncontrado.getNome() + " adicionado com sucesso à tarefa!");
 	    }
 	}
-	
+
 
 	public List<RecursoTarefa> getRecursosTarefas() {
 	    return this.recursosTarefas;

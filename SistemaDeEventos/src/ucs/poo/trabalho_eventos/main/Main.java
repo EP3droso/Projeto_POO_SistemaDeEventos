@@ -161,14 +161,14 @@ public class Main {
 	public static void registrarTarefas(Main main) {
 	    Scanner sc = new Scanner(System.in);
 	    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
-	    sdf.setLenient(false); 
-
+	    sdf.setLenient(false);
+	
 	    System.out.println("Selecione a tarefa que deseja registrar a execução:");
 	    listarTarefas(main);
-
+	
 	    System.out.print("Digite o nome exato da tarefa: ");
 	    String nomeTarefa = sc.nextLine();
-
+	
 	    Tarefa tarefaAlvo = null;
 	    for (Tarefa t : main.tarefasDB) {
 	        if (t.getNome().equalsIgnoreCase(nomeTarefa)) {
@@ -176,19 +176,15 @@ public class Main {
 	            break;
 	        }
 	    }
-
+	
 	    if (tarefaAlvo == null) {
 	        System.out.println("Tarefa não encontrada!");
 	        return;
 	    }
-
-	    if (tarefaAlvo.getRecursosTarefas().isEmpty()) {
-	        System.out.println("Aviso: Esta tarefa não possui recursos vinculados, mas o horário será registrado nos metadados.");
-	    }
-
+	
 	    java.util.Date dataInicio = null;
 	    java.util.Date dataFim = null;
-
+	
 	    while (dataInicio == null) {
 	        System.out.print("Insira a data e hora de INÍCIO (formato: DD/MM/AAAA HH:MM): ");
 	        String strInicio = sc.nextLine();
@@ -198,7 +194,7 @@ public class Main {
 	            System.out.println("Formato de data/hora inválido! Tente novamente.");
 	        }
 	    }
-
+	
 	    while (dataFim == null) {
 	        System.out.print("Insira a data e hora de TÉRMINO (formato: DD/MM/AAAA HH:MM): ");
 	        String strFim = sc.nextLine();
@@ -212,15 +208,55 @@ public class Main {
 	            System.out.println("Formato de data/hora inválido! Tente novamente.");
 	        }
 	    }
-	    
+	
 	    for (RecursoTarefa rt : tarefaAlvo.getRecursosTarefas()) {
 	        rt.setHoraIni(dataInicio);
 	        rt.setHoraFim(dataFim);
 	    }
-
+	
+	    if (!tarefaAlvo.getRecursosTarefas().isEmpty()) {
+	        System.out.println("\n--- AJUSTE FINAL DE RECURSOS UTILIZADOS ---");
+	        System.out.println("A tarefa terminou. Indique a quantidade real consumida de cada recurso:");
+	        
+	        for (RecursoTarefa rt : tarefaAlvo.getRecursosTarefas()) {
+	            Recurso recursoAlocado = rt.getRecurso();
+	            
+	            Recurso recursoGlobal = null;
+	            for (Recurso r : main.recursosDB) {
+	                if (r.getId() == recursoAlocado.getId()) {
+	                    recursoGlobal = r;
+	                    break;
+	                }
+	            }
+	            
+	            if (recursoGlobal == null) continue;
+	            
+	            boolean consumoValido = false;
+	            int gastoReal = 0;
+	            
+	            while (!consumoValido) {
+	                System.out.println("Recurso: " + recursoAlocado.getNome());
+	                System.out.println("Quantidade alocada original: " + recursoAlocado.getQuantidade());
+	                System.out.print("Quantidade REALMENTE consumida: ");
+	                gastoReal = Utilitarios.lerInteiroComVerificacao();
+	                
+	                if (gastoReal < 0 || gastoReal > recursoAlocado.getQuantidade()) {
+	                    System.out.println("Quantidade inválida! Não pode ser negativa nem maior que a alocada.");
+	                } else {
+	                    consumoValido = true;
+	                }
+	            }
+	            
+	            int sobra = recursoAlocado.getQuantidade() - gastoReal;
+	            if (sobra > 0) {
+	                recursoGlobal.atualizarQuantidade(-sobra);
+	                System.out.println("Foram devolvidas " + sobra + " unidades de '" + recursoAlocado.getNome() + "' ao estoque global.");
+	            }
+	            recursoAlocado.setQuantidade(gastoReal);
+	        }
+	    }
+	
 	    System.out.println("\nExecução da tarefa '" + tarefaAlvo.getNome() + "' registrada com sucesso!");
-	    System.out.println("Início: " + sdf.format(dataInicio));
-	    System.out.println("Término: " + sdf.format(dataFim));
 	}
 
 	
@@ -508,6 +544,17 @@ public class Main {
 			System.out.println("Recurso com ID " + idRecurso + " não encontrado!");
 			return;
 		}
+		
+	    for (Tarefa t : main.tarefasDB) {
+	        java.util.List<RecursoTarefa> paraRemover = new java.util.ArrayList<>();
+	        for (RecursoTarefa rt : t.getRecursosTarefas()) {
+	            if (rt.getRecurso().getId() == idRecurso) {
+	                paraRemover.add(rt);
+	            }
+	        }
+	        t.getRecursosTarefas().removeAll(paraRemover);
+	    }
+		
 		
 		main.recursosDB.remove(recursoParaRemover);
 		System.out.println("Recurso '" + recursoParaRemover.getNome() + "' removido com sucesso!");
