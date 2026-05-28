@@ -60,7 +60,7 @@ public class Recurso {
 	
 	@Override
 	public String toString() {
-		return "Recurso [id=" + id + ", Nome=" + nome + ", tipo=" + tipo + ", recursosTarefas=" + recursosTarefas
+		return "\nRecurso [id=" + id + ", Nome=" + nome + ", tipo=" + tipo + ", recursosTarefas=" + recursosTarefas
 				+ "]";
 	}
 }

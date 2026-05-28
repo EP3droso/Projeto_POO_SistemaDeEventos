@@ -37,7 +37,7 @@ public class Empresa implements Relatorio {
 	public void listarEventos() {
 		System.out.println("Os eventos cadastrados são:");
 		for(Evento evento : this.eventos){
-			System.out.println("Evento " + evento.getNome() + "  ID: " + evento.getId());
+			System.out.println("Evento " + evento.getNome() + "  ID: " + eventos.indexOf(evento));
 		}
 	}
 
@@ -131,6 +131,9 @@ public class Empresa implements Relatorio {
 		if(eventoAux != null) {
 			this.eventos.remove(eventoAux);
 		}
+		for(Evento eventoAux2 : this.eventos) {
+			eventoAux2.eventoSendoCadastrado(this.eventos.indexOf(eventoAux));
+		}
 	}
 	
 
@@ -138,6 +141,7 @@ public class Empresa implements Relatorio {
 		Evento eventoAux = this.getEvento(id);
 		if(eventoAux != null) {
 			eventoAux.setNome(nome);
+			return;
 		}
 	}
     public Colaborador getColaborador(int id) {

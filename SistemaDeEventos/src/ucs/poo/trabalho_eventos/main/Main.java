@@ -110,7 +110,7 @@ public class Main {
 		boolean achou = false;
 		for(Tarefa tarefa : main.tarefasDB) {
 			if(main.tarefasDB.indexOf(tarefa) == idTarefa ) {
-				System.out.println(tarefa.getNome() + " - " + tarefa.getPreRequesitos() + " - " + tarefa.getRecursos() );
+				System.out.println(tarefa.getNome() + "\n\nPre-Requesitos:\n" + tarefa.getPreRequesitos() + "\n\nRecursos:\n" + tarefa.getRecursos() );
 				achou = true;
 			}
 		}
@@ -994,7 +994,7 @@ public class Main {
 								
 								int idTarefa = Utilitarios.lerInteiroComVerificacao();
 								
-								Tarefa tarefaAux = main.tarefasDB.get(idTarefa-1);
+								Tarefa tarefaAux = main.tarefasDB.get(idTarefa);
 								eventoAux.cadastrarTarefa(tarefaAux);
 								System.out.println("Tarefas de " + eventoAux.getNome());
 								eventoAux.listarTarefas();
@@ -1018,7 +1018,7 @@ public class Main {
 								
 								int idTarefa = Utilitarios.lerInteiroComVerificacao();
 								if(eventoAux.getTarefa(idTarefa) != null){
-									eventoAux.excluirTarefa(idTarefa-1);
+									eventoAux.excluirTarefa(idTarefa);
 									System.out.println("Tarefas de " + eventoAux.getNome());
 									eventoAux.listarTarefas();
 								}
