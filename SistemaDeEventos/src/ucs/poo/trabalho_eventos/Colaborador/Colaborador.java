@@ -1,4 +1,4 @@
-package ucs.poo.trabalho_eventos.models;
+package ucs.poo.trabalho_eventos.Colaborador;
 
 import java.util.ArrayList;
 import java.util.List;

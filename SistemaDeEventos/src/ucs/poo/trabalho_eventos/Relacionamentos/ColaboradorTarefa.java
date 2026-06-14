@@ -1,6 +1,8 @@
-package ucs.poo.trabalho_eventos.models;
+package ucs.poo.trabalho_eventos.Relacionamentos;
 
 import java.util.Date;
+
+import ucs.poo.trabalho_eventos.Colaborador.Colaborador;
 
 public class ColaboradorTarefa {
 

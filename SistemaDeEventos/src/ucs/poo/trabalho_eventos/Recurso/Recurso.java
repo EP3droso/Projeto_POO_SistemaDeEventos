@@ -1,6 +1,8 @@
-package ucs.poo.trabalho_eventos.models;
+package ucs.poo.trabalho_eventos.Recurso;
 import java.util.ArrayList;
 import java.util.List;
+
+import ucs.poo.trabalho_eventos.Relacionamentos.RecursoTarefa;
 
 public class Recurso {
 	private static int contadorId = 1; 

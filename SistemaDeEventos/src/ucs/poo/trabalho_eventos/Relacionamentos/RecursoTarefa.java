@@ -1,5 +1,8 @@
-package ucs.poo.trabalho_eventos.models;
+package ucs.poo.trabalho_eventos.Relacionamentos;
 import java.util.Date;
+
+import ucs.poo.trabalho_eventos.Recurso.Recurso;
+import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
 
 public class RecursoTarefa {
     private Date horaIni;

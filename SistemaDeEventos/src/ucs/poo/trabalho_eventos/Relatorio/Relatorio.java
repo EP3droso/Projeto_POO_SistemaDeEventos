@@ -1,4 +1,4 @@
-package ucs.poo.trabalho_eventos.interfaces;
+package ucs.poo.trabalho_eventos.Relatorio;
 
 import java.util.Date;
 

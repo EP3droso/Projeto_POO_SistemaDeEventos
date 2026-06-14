@@ -1,21 +1,45 @@
-package ucs.poo.trabalho_eventos.models;
+package ucs.poo.trabalho_eventos.Evento;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Evento {
+import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
+
+public class Evento {
 		
 	private int id;
 	private String nome;
 	private List<Tarefa> tarefas;
+	private String tipo;
+	
+	public void setTipo(int i){
+		if(i==1) {
+			this.tipo = "Festa";
+		}else if(i==2){
+			this.tipo = "Formatura";
+		}else if(i==3){
+			this.tipo = "Evento Corporativo";
+		}
+	}
+
+	public String getTipo(){
+		return tipo;
+	}
 	
 	public List<Tarefa> getTarefas() {
 	    return tarefas;
 	}
 	
-	public Evento(String nome){
+	public Evento(String nome, int i){
 		this.nome = nome;
 		this.tarefas = new ArrayList<>();
+		if(i==1) {
+			this.tipo = "Festa";
+		}else if(i==2){
+			this.tipo = "Formatura";
+		}else if(i==3){
+			this.tipo = "Evento Corporativo";
+		}
 	}
 	
 	public void eventoSendoCadastrado(int index){

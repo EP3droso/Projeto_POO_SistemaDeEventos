@@ -1,16 +1,25 @@
-package ucs.poo.trabalho_eventos.models;
+package ucs.poo.trabalho_eventos.main;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import ucs.poo.trabalho_eventos.interfaces.Relatorio;
+import ucs.poo.trabalho_eventos.Colaborador.Colaborador;
+import ucs.poo.trabalho_eventos.Evento.Evento;
+import ucs.poo.trabalho_eventos.Recurso.Recurso;
+import ucs.poo.trabalho_eventos.Relacionamentos.ColaboradorTarefa;
+import ucs.poo.trabalho_eventos.Relacionamentos.RecursoTarefa;
+import ucs.poo.trabalho_eventos.Relatorio.Relatorio;
+import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
 
 public class Empresa implements Relatorio {
 	
 	private String nome;
-	private List<Evento> eventos;
-	private List<Colaborador> colaboradores;
+	private List<Evento> eventos = new ArrayList<>();;
+	private List<Colaborador> colaboradores = new ArrayList<>();;
+	//private String nomeEmpresa;
+	private List<Tarefa> tarefasDB = new ArrayList<>();
+	private List<Recurso> recursosDB = new ArrayList<>();
 
 	
 	public Empresa(String nome) {
@@ -240,4 +249,20 @@ public class Empresa implements Relatorio {
             System.out.println("----------------------");
         }
     }
+
+	public List<Tarefa> getTarefasDB() {
+		return tarefasDB;
+	}
+
+	public void setTarefasDB(List<Tarefa> tarefasDB) {
+		this.tarefasDB = tarefasDB;
+	}
+
+	public List<Recurso> getRecursosDB() {
+		return recursosDB;
+	}
+
+	public void setRecursosDB(List<Recurso> recursosDB) {
+		this.recursosDB = recursosDB;
+	}
 }
