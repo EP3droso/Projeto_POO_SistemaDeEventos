@@ -158,12 +158,13 @@ public class Functions {
 	    }
 	    
 	    System.out.println("\nCOLABORADORES CADASTRADOS:");
-	    empresa.mostrarColaboradores();
+	    //empresa.mostrarColaboradores();
 
 	    System.out.print("Digite o ID do colaborador responsável: ");
 	    int idColaborador = Utilitarios.lerInteiroComVerificacao();
-
-	    Colaborador colaborador = empresa.getColaborador(idColaborador);
+	    
+	    
+	    Colaborador colaborador = empresa.getColaboradores().get(idColaborador);
 
 	    if (tarefaAlvo.getRecursosTarefas().isEmpty()) {
 	        System.out.println("Aviso: Esta tarefa não possui recursos vinculados, mas o horário será registrado nos metadados.");

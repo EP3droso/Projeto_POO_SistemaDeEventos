@@ -40,6 +40,8 @@ public class Evento {
 		}else if(i==3){
 			this.tipo = "Evento Corporativo";
 		}
+		
+		
 	}
 	
 	public void eventoSendoCadastrado(int index){

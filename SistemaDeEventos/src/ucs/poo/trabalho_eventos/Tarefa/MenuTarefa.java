@@ -2,11 +2,12 @@ package ucs.poo.trabalho_eventos.Tarefa;
 
 import java.util.Scanner;
 import ucs.poo.trabalho_eventos.main.Empresa;
+import ucs.poo.trabalho_eventos.main.Sistema;
 import ucs.poo.trabalho_eventos.main.Utilitarios;
 
 public class MenuTarefa {
 
-    public void menuTarefa(Empresa empresa) {
+    public void menuTarefa(Empresa empresa, Sistema sistemas) {
         Scanner sc = new Scanner(System.in);
         int escolha = 10;
 

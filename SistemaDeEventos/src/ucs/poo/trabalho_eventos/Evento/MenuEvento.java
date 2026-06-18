@@ -4,10 +4,12 @@ import java.util.Scanner;
 import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
 import ucs.poo.trabalho_eventos.main.Empresa;
 import ucs.poo.trabalho_eventos.main.Utilitarios;
+import ucs.poo.trabalho_eventos.main.Sistema;
 
 public class MenuEvento {
 
-    public void menuEvento(Empresa empresa) {
+    public void menuEvento(Empresa empresa, Sistema sistema) {
+    	/*
         Scanner sc = new Scanner(System.in);
         int escolha = 10;
 
@@ -21,6 +23,7 @@ public class MenuEvento {
             return;
         }
         else if (escolha == 1) {
+        	
             System.out.println("Insira o nome do evento:");
             String nomeEvento = sc.nextLine();
             System.out.println("Insira o tipo do evento:\n1-Festa\n2-Formatura\n3-Evento Corporativo");
@@ -104,5 +107,7 @@ public class MenuEvento {
                 System.out.println("Esse ID de tarefa não existe no evento.");
             }
         }
+    */
     }
+    
 }

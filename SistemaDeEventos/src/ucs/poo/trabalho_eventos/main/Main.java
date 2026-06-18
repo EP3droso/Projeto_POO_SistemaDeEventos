@@ -1,5 +1,6 @@
 package ucs.poo.trabalho_eventos.main;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 import ucs.poo.trabalho_eventos.Colaborador.MenuColaborador;
@@ -35,52 +36,79 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);		
-		String nomeEmpresa = login();
-		Empresa empresa = new Empresa(nomeEmpresa);
 		
-		System.out.println("Seja bem vindo ao menu principal do Sistema de Controle de Eventos (**o menu visual será inserido posteriormente)");
+		Sistema sistema = new Sistema();
+		
 
-		for(;;) {
+		if(sistema.ArquivoExiste()) {
+			Empresa empresa = null;
+			String nomeEmpresa;
+			if((empresa = sistema.desserializarEmpresa()) == null) {
+				nomeEmpresa = login();
+				empresa = new Empresa(nomeEmpresa);
+			}
 			
-			mostrarMenuPrincipal(nomeEmpresa);
+
 			
-			int intEntrada = Utilitarios.lerInteiroComVerificacao();
+			nomeEmpresa = empresa.getNome();
+			
+			Scanner sc = new Scanner(System.in);		
+			
+			MenuEvento menuEvento = new MenuEvento();
+			MenuColaborador menuColaborador = new MenuColaborador();
+			MenuTarefa menuTarefa = new MenuTarefa();
+			MenuRecurso menuRecurso = new MenuRecurso ();
+			MenuRelatorio menuRelatorio = new MenuRelatorio();
+			
+			System.out.println("Seja bem vindo ao menu principal do Sistema de Controle de Eventos (**o menu visual será inserido posteriormente)");
+	
+			for(;;) {
 				
-			if(intEntrada == 1) {
-				MenuEvento menuEvento = new MenuEvento();
-				menuEvento.menuEvento(empresa);
+				mostrarMenuPrincipal(nomeEmpresa);
+				
+				int intEntrada = Utilitarios.lerInteiroComVerificacao();
+					
+				if(intEntrada == 1) {
+					
+					menuEvento.menuEvento(empresa,sistema);
+				}
+				
+				    
+				else if(intEntrada == 2) {
+					
+					menuColaborador.menuColaborador(empresa,sistema);
+				}		
+				
+				else if (intEntrada == 3) {
+				    
+				    menuTarefa.menuTarefa(empresa,sistema);
+				}
+	
+				else if(intEntrada == 4) {
+					
+					menuRecurso.menuRecurso(empresa,sistema);
+				}
+				else if (intEntrada == 5) {
+				    
+				    menuRelatorio.menuRelatorio(empresa,sistema);
+				}
+				
+				else if(intEntrada == 0) {
+					System.out.println("Saindo...");
+					System.exit(0);
+				}
+				
+				else {
+					System.out.println("O numero entrado não é uma das opções do menu!");
+				}		
 			}
 			
-			    
-			else if(intEntrada == 2) {
-				MenuColaborador menuColaborador = new MenuColaborador();
-				menuColaborador.menuColaborador(empresa);
-			}		
-			
-			else if (intEntrada == 3) {
-			    MenuTarefa menuTarefa = new MenuTarefa();
-			    menuTarefa.menuTarefa(empresa);
-			}
-
-			else if(intEntrada == 4) {
-				MenuRecurso menuRecurso = new MenuRecurso ();
-				menuRecurso.menuRecurso(empresa);
-			}
-			else if (intEntrada == 5) {
-			    MenuRelatorio menuRelatorio = new MenuRelatorio();
-			    menuRelatorio.menuRelatorio(empresa);
-			}
-			
-			else if(intEntrada == 0) {
-				System.out.println("Saindo...");
-				System.exit(0);
-			}
-			
-			else {
-				System.out.println("O numero entrado não é uma das opções do menu!");
-			}		
 		}
+		else {
+			System.out.println("O arquivo não existe! Houve algum erro na criação do arquivo");
+		}
+		
+
 	}
 	
 	

@@ -2,11 +2,13 @@ package ucs.poo.trabalho_eventos.Recurso;
 
 import java.util.Scanner;
 import ucs.poo.trabalho_eventos.main.Empresa;
+import ucs.poo.trabalho_eventos.main.Sistema;
 import ucs.poo.trabalho_eventos.main.Utilitarios;
+
 
 public class MenuRecurso {
 
-    public void menuRecurso(Empresa empresa) {
+    public void menuRecurso(Empresa empresa, Sistema sistema) {
         Scanner sc = new Scanner(System.in);
         int escolha = 10;
 
