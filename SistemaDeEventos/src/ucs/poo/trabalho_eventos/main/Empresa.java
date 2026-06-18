@@ -26,6 +26,54 @@ public class Empresa{
 	private int idAtualRecursos=0;
 
 	
+	public int getIdAtualEventos() {
+		return idAtualEventos;
+	}
+
+
+
+	public void setIdAtualEventos(int idAtualEventos) {
+		this.idAtualEventos = idAtualEventos;
+	}
+
+
+
+	public int getIdAtualEColaboradores() {
+		return idAtualEColaboradores;
+	}
+
+
+
+	public void setIdAtualEColaboradores(int idAtualEColaboradores) {
+		this.idAtualEColaboradores = idAtualEColaboradores;
+	}
+
+
+
+	public int getIdAtualTarefas() {
+		return idAtualTarefas;
+	}
+
+
+
+	public void setIdAtualTarefas(int idAtualTarefas) {
+		this.idAtualTarefas = idAtualTarefas;
+	}
+
+
+
+	public int getIdAtualRecursos() {
+		return idAtualRecursos;
+	}
+
+
+
+	public void setIdAtualRecursos(int idAtualRecursos) {
+		this.idAtualRecursos = idAtualRecursos;
+	}
+
+
+
 	public Empresa(String nome) {
 		this.nome = nome;
 		this.eventos = new ArrayList<>();
