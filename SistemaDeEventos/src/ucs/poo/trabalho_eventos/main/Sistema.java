@@ -73,9 +73,13 @@ public class Sistema {
     	try {
 			json = this.lerArquivo();
 			empresa = this.mapper.readValue(json, Empresa.class);
+			
 		} catch (IOException e) {
 			System.out.println("Erro na leitura da empresa");
+			System.out.println(e);
 		}
+    	
+
     	return empresa;	
 	}
 

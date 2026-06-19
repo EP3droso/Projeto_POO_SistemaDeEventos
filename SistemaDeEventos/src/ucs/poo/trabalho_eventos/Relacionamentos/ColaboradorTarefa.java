@@ -22,8 +22,15 @@ public class ColaboradorTarefa {
         this.horaIni = horaIni;
         this.horaFim = horaFim;
     }
+    
+    public ColaboradorTarefa() {
+    }
 
-    public Colaborador getColaborador() { 
+    public void setColaborador(Colaborador colaborador) {
+		this.colaborador = colaborador;
+	}
+
+	public Colaborador getColaborador() { 
         return colaborador;
     }
 

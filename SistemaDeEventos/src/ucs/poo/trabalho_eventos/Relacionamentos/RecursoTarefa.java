@@ -14,6 +14,9 @@ public class RecursoTarefa {
         this.recurso = recurso;
         this.tarefa = tarefa;
     }
+    
+    public RecursoTarefa() {
+    }
   
 
 	public Recurso getRecurso() {

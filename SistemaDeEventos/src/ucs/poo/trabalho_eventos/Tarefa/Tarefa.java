@@ -3,6 +3,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 import ucs.poo.trabalho_eventos.Colaborador.Colaborador;
@@ -24,6 +27,14 @@ public class Tarefa {
 	
 	public Tarefa(String nome) {
 		this.nome = nome;
+	}
+
+	public void setRecursosTarefas(List<RecursoTarefa> recursosTarefas) {
+		this.recursosTarefas = recursosTarefas;
+	}
+
+	public void setColaboradoresTarefas(List<ColaboradorTarefa> colaboradoresTarefas) {
+		this.colaboradoresTarefas = colaboradoresTarefas;
 	}
 
 	public String getNome() {
@@ -77,7 +88,8 @@ public class Tarefa {
 	    }
 	    return false;
 	}
-
+	
+	@JsonIgnore
 	public String getRecursos() {
 		String recursosString="";
 		for(RecursoTarefa rt1 : recursosTarefas)

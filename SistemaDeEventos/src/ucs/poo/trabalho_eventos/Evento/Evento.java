@@ -10,68 +10,57 @@ public class Evento {
 	private int id;
 	private String nome;
 	private List<Tarefa> tarefas;
-	private String tipo;
+	private String tipoEvento;
 	
-	public void setTipo(int i){
+
+	
+	public Evento(String nome, int i,int id){
+		this(); 
+		this.nome = nome;
 		if(i==1) {
-			this.tipo = "Festa";
+			this.tipoEvento = "Festa";
 		}else if(i==2){
-			this.tipo = "Formatura";
+			this.tipoEvento = "Formatura";
 		}else if(i==3){
-			this.tipo = "Evento Corporativo";
+			this.tipoEvento = "Evento Corporativo";
 		}
+	}
+	
+	public Evento() {
+		this.tarefas = new ArrayList<>();
+	}
+	
+
+	public String getTipoEvento() {
+		return tipoEvento;
+	}
+
+	public void setTipoEvento(String tipoEvento) {
+		this.tipoEvento = tipoEvento;
+	}
+
+	public void setTarefas(List<Tarefa> tarefas) {
+		this.tarefas = tarefas;
 	}
 
 	public String getTipo(){
-		return tipo;
+		return tipoEvento;
+	}
+	
+	public void setTipo(String tipo) {
+		this.tipoEvento = tipo;
 	}
 	
 	public List<Tarefa> getTarefas() {
 	    return tarefas;
 	}
 	
-	public Evento(String nome, int i){
-		this.nome = nome;
-		this.tarefas = new ArrayList<>();
-		if(i==1) {
-			this.tipo = "Festa";
-		}else if(i==2){
-			this.tipo = "Formatura";
-		}else if(i==3){
-			this.tipo = "Evento Corporativo";
-		}
-		
-		
-	}
 	
-	public void eventoSendoCadastrado(int index){
-		this.id = index;
+	public void setId(int id) {
+		this.id = id;
 	}
-	
-	public void acompanharAndamento() {
-		int tam = this.tarefas.size(), tarRealizadas = 0;
-		/*
-		for(Tarefa tarefa : tarefas) {
-			if(tarefa.getColaboradorTarefa() != null ) {
-				tarRealizadas +=1;
-			}
-		}
-		*/
 
-		System.out.println("O evento já foi " + ((tarRealizadas*100)/tam) + "% realizado");
-	}
-	
-	public void consultarHistoricoTarefas() {
-		/*
-		for(Tarefa tarefa : tarefas) {
-			if(tarefa.getColaboradorTarefa() != null ) {
-				 System.out.println("Tarefa "+ tarefa.getNome() + " Realizada");
-			}
-		}
-		*/
-	}
-	
-	
+
 	public void cadastrarTarefa(Tarefa tarefa) {
 		this.tarefas.add(tarefa);
 	}
