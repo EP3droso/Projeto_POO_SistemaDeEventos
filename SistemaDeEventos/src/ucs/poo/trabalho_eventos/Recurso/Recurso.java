@@ -11,6 +11,9 @@ public class Recurso {
 	private String nome;
 	private String tipo;
 	private int quantidade;
+	List<RecursoTarefa> recursosTarefas = new ArrayList<>();
+
+	
 
 	public Recurso(int id, String nome, String tipo, int quantidade) {
 	    this.id = id;
@@ -32,7 +35,7 @@ public class Recurso {
 	}
 
 
-	List<RecursoTarefa> recursosTarefas = new ArrayList<>();
+	
 	
 
 // Getters e Sets
@@ -64,5 +67,22 @@ public class Recurso {
 	public String toString() {
 		return "\nRecurso [id=" + id + ", Nome=" + nome + ", tipo=" + tipo + ", recursosTarefas=" + recursosTarefas
 				+ "]";
+	}
+	
+	
+	public static int getContadorId() {
+		return contadorId;
+	}
+
+	public static void setContadorId(int contadorId) {
+		Recurso.contadorId = contadorId;
+	}
+
+	public List<RecursoTarefa> getRecursosTarefas() {
+		return recursosTarefas;
+	}
+
+	public void setRecursosTarefas(List<RecursoTarefa> recursosTarefas) {
+		this.recursosTarefas = recursosTarefas;
 	}
 }

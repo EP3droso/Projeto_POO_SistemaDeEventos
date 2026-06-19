@@ -30,9 +30,24 @@ public class Colaborador {
         this.senha = senha;
         this.funcao = funcao;
     }
+    
+    public Colaborador() {
+    }
  
 
-    public int getId() { 
+    public static int getContadorId() {
+		return contadorId;
+	}
+
+	public static void setContadorId(int contadorId) {
+		Colaborador.contadorId = contadorId;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getId() { 
         return id; 
     }
 

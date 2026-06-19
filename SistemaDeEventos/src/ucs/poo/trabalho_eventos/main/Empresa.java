@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import ucs.poo.trabalho_eventos.Colaborador.Colaborador;
 import ucs.poo.trabalho_eventos.Evento.Evento;
 import ucs.poo.trabalho_eventos.Recurso.Recurso;
@@ -71,16 +74,20 @@ public class Empresa{
 	public void setIdAtualRecursos(int idAtualRecursos) {
 		this.idAtualRecursos = idAtualRecursos;
 	}
-
-
-
+	
 	public Empresa(String nome) {
+		this(); 
 		this.nome = nome;
+	}
+	
+	public Empresa() {
 		this.eventos = new ArrayList<>();
 		this.colaboradores = new ArrayList<>();
 		this.tarefasDB = new ArrayList<>();
 		this.recursosDB = new ArrayList<>();
 	}
+
+
     
     
 
