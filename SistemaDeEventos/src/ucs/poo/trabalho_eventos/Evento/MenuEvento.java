@@ -21,9 +21,9 @@ public class MenuEvento {
             System.out.println("MENU de Eventos\n"
             		+ "0 - Voltar ao Menu\n"
             		+ "1 - Cadastrar Evento\n"
-            		+ "2 - Cadastrar Tarefa no Evento\n"
-            		+ "3 - Excluir Evento\n"
-            		+ "4 - Alterar nome do Evento\n"
+            		+ "2 - Excluir Evento\n"
+            		+ "3 - Alterar Evento\n"
+            		+ "4 - Cadastrar Tarefa no Evento\n"
             		+ "5 - Excluir Tarefa do Evento\n"
             		+ "6 - Ver evento\n"
             		+ "7 - Listar evntos\n");
@@ -39,6 +39,34 @@ public class MenuEvento {
         }
         
         else if (escolha == 2) {
+            if (Functions.eventosIsEmpty(empresa)) {
+                return;
+            }
+            
+            Functions.pesquisaPorContem(empresa);
+            System.out.println("Selecione o ID do evento a excluir:");
+            int idEvento = Utilitarios.lerInteiroComVerificacao();
+            Functions.excluirEvento(idEvento,empresa,sistema);
+
+        }
+        
+        else if (escolha == 3) {
+        	if (Functions.eventosIsEmpty(empresa)) {
+                Functions.cadastrarEvento(empresa, sistema, eventosDB);
+            }
+        	
+            Functions.pesquisaPorContem(empresa);
+            System.out.println("Selecione o ID do evento a alterar:");
+            int idEvento = Utilitarios.lerInteiroComVerificacao();
+            Evento eventoAlvo = Functions.getEvento(idEvento,empresa);
+            
+            if (eventoAlvo == null) return;
+            
+            Functions.alterarEvento(eventoAlvo,empresa,sistema);
+            
+        }
+        
+        else if (escolha == 4) {
             if (empresa.getEventos().isEmpty()) {
                 System.out.println("Nenhum evento cadastrado.");
                 Functions.cadastrarEvento(empresa,sistema,eventosDB);
@@ -49,8 +77,8 @@ public class MenuEvento {
                 adicionarTarefa(empresa);
             }
             
-            Functions.listarEventos(empresa);
-            System.out.println("Selecione a posição do evento:");
+            Functions.pesquisaPorContem(empresa);
+            System.out.println("Selecione o ID do evento:");
             int indexEvento = Utilitarios.lerInteiroComVerificacao();
             Evento eventoAlvo = Functions.getEvento(indexEvento,empresa);
             if (eventoAlvo == null) return;
@@ -59,6 +87,18 @@ public class MenuEvento {
             for (Tarefa t : empresa.getTarefasDB()) {
                 System.out.println(empresa.getTarefasDB().indexOf(t) + " - " + t.getNome());
             }
+            
+            System.out.println("Deseja adicionar uma nova tarefa?  S/N");
+            String novaTarefa = sc.nextLine();
+            
+            if("S".equals(novaTarefa.toUpperCase())) adicionarTarefa(empresa);
+            
+            
+            System.out.println("Tarefas disponíveis:");
+            for (Tarefa t : empresa.getTarefasDB()) {
+                System.out.println(empresa.getTarefasDB().indexOf(t) + " - " + t.getNome());
+            }
+            
             System.out.println("ID da tarefa a cadastrar no evento:");
             int idTarefa = Utilitarios.lerInteiroComVerificacao();
             
@@ -71,38 +111,14 @@ public class MenuEvento {
             
             sistema.serializarEmpresa(empresa);
         }
-        else if (escolha == 3) {
-            if (Functions.eventosIsEmpty(empresa)) {
-                return;
-            }
-            
-            Functions.listarEventos(empresa);
-            System.out.println("Selecione o ID do evento a excluir:");
-            int idEvento = Utilitarios.lerInteiroComVerificacao();
-            Functions.excluirEvento(idEvento,empresa,sistema);
+        
 
-        }
-        else if (escolha == 4) {
-        	if (Functions.eventosIsEmpty(empresa)) {
-                Functions.cadastrarEvento(empresa, sistema, eventosDB);
-            }
-        	
-            Functions.listarEventos(empresa);
-            System.out.println("Selecione o ID do evento a alterar:");
-            int idEvento = Utilitarios.lerInteiroComVerificacao();
-            Evento eventoAlvo = Functions.getEvento(idEvento,empresa);
-            
-            if (eventoAlvo == null) return;
-            
-            Functions.alterarEvento(eventoAlvo,empresa,sistema);
-            
-        }
         else if (escolha == 5) {
             if (Functions.eventosIsEmpty(empresa)) {
                 Functions.cadastrarEvento(empresa, sistema, eventosDB);
             }
             
-            Functions.listarEventos(empresa);
+            Functions.pesquisaPorContem(empresa);
             System.out.println("Selecione o ID do evento:");
             int idEvento = Utilitarios.lerInteiroComVerificacao();
             Evento eventoAlvo = Functions.getEvento(idEvento,empresa);
@@ -110,7 +126,7 @@ public class MenuEvento {
 
             if (eventoAlvo.getTarefas().isEmpty()) {
                 System.out.println("Nenhuma tarefa cadastrada no evento.");
-                adicionarTarefa(empresa);
+                return;
             }
             
             eventoAlvo.listarTarefas();
@@ -131,7 +147,7 @@ public class MenuEvento {
                 Functions.cadastrarEvento(empresa, sistema, eventosDB);
             }
         	
-        	Functions.listarEventos(empresa);
+        	Functions.pesquisaPorContem(empresa);
         	System.out.println("Selecione o ID do evento:");
             int idEvento = Utilitarios.lerInteiroComVerificacao();
             Evento eventoAlvo = Functions.getEvento(idEvento,empresa);

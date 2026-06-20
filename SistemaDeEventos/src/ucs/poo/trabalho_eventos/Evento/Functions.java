@@ -1,5 +1,6 @@
 package ucs.poo.trabalho_eventos.Evento;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -85,15 +86,21 @@ public class Functions {
         		+ "1-Festa\n"
         		+ "2-Formatura\n"
         		+ "3-Evento Corporativo");
-        int novoTipo = Utilitarios.lerInteiroComVerificacao();
+        
+        int novoTipo =0;
+		String novoTipoString = sc.nextLine();
+		try {
+			novoTipo = Integer.parseInt(novoTipoString);
+		}
+		catch(NumberFormatException e){
+		}
 		
-        String enter = System.lineSeparator();
-        if(!enter.equals(novoNome)) {
+        if(!"".equals(novoNome)) {
         	eventoAux.setNome(novoNome);
         }
         
         //VER DA VERIFICAÇÂO DE Utilitarios.lerInteiroComVerificacao();
-        if(!enter.equals(novoTipo)) {
+        if(!"".equals(novoTipo)) {
     		if(novoTipo==1) {
     			eventoAux.setTipo("Festa");
     		}else if(novoTipo==2){
@@ -111,10 +118,25 @@ public class Functions {
 	public static void mostrarInfoEvento(Evento eventoAlvo, Empresa empresa) {
 		System.out.println("|---------------------------------------------------------------------------|");
         System.out.println(eventoAlvo.getNome() + ":" );
+        System.out.println("->" + eventoAlvo.getTipo());
         System.out.println("Tarefas:");
         for(Tarefa t : eventoAlvo.getTarefas()) {
         	System.out.println(eventoAlvo.getTarefas().indexOf(t) + " - " + t.getNome());
         }
+	}
+	
+	
+	public static void pesquisaPorContem(Empresa empresa) {
+		Scanner sc = new Scanner(System.in);
+		
+		System.out.println("Digite o evento:");
+		String linhaContem = sc.nextLine();
+		
+		for(Evento evento : empresa.getEventos()){
+			if(evento.getNome().contains(linhaContem)) {
+				System.out.println(empresa.getEventos().indexOf(evento) +" - " + evento.getNome());
+			}
+		}
 	}
 	
 }
