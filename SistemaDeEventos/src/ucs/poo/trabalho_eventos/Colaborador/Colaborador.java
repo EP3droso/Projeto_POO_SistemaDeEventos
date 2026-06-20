@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Colaborador {
 
-    private static int contadorId = 1;
+   
 
     private int id;
     private String nome;
@@ -14,7 +14,7 @@ public class Colaborador {
     private String senha;
     private String funcao;
 
-    public Colaborador(String nome, String email, String senha, String funcao) {
+    public Colaborador(String nome, String email, String senha, String funcao,int id) {
         if (nome == null || nome.isBlank())
             throw new IllegalArgumentException("Nome do colaborador não pode ser vazio.");
         if (email == null || email.isBlank())
@@ -24,7 +24,7 @@ public class Colaborador {
         if (funcao == null || funcao.isBlank())
             throw new IllegalArgumentException("Função do colaborador não pode ser vazia.");
 
-        this.id = contadorId++;
+        this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
@@ -34,14 +34,6 @@ public class Colaborador {
     public Colaborador() {
     }
  
-
-    public static int getContadorId() {
-		return contadorId;
-	}
-
-	public static void setContadorId(int contadorId) {
-		Colaborador.contadorId = contadorId;
-	}
 
 	public void setId(int id) {
 		this.id = id;

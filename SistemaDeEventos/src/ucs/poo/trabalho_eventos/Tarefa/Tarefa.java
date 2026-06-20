@@ -15,6 +15,8 @@ import ucs.poo.trabalho_eventos.Relacionamentos.RecursoTarefa;
 import ucs.poo.trabalho_eventos.main.Utilitarios;
 
 public class Tarefa {
+	
+	int id = 0;
 	private String nome;
 	List<Tarefa> preRequesitos = new ArrayList<>();
 	List<RecursoTarefa> recursosTarefas = new ArrayList<>();
@@ -27,6 +29,14 @@ public class Tarefa {
 	
 	public Tarefa(String nome) {
 		this.nome = nome;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public void setRecursosTarefas(List<RecursoTarefa> recursosTarefas) {

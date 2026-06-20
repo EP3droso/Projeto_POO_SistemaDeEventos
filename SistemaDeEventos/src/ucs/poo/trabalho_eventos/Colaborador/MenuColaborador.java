@@ -33,8 +33,9 @@ public class MenuColaborador {
                 String senha = sc.nextLine();
                 System.out.println("Insira a função do colaborador:");
                 String funcao = sc.nextLine();
-                empresa.cadastrarColaborador(new Colaborador(nome, email, senha, funcao));
                 
+                empresa.cadastrarColaborador(new Colaborador(nome, email, senha, funcao,empresa.getIdAtualColaboradores()));
+                empresa.setIdAtualColaboradores(empresa.getIdAtualColaboradores()+1);
                 
                 System.out.println("Colaborador cadastrado com sucesso!");
             } catch (IllegalArgumentException e) {
