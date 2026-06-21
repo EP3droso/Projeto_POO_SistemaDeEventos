@@ -74,7 +74,13 @@ public class MenuEvento {
             
             if (empresa.getTarefasDB().isEmpty()) {
                 System.out.println("Nenhuma tarefa cadastrada no sistema.");
-                adicionarTarefa(empresa);
+                System.out.println("Deseja cadastrar uma tarefa agora? (S para sim, Enter para pular):");
+                String resposta = sc.nextLine();
+                if(resposta.equalsIgnoreCase("S")) {
+                    adicionarTarefa(empresa);
+                } else {
+                    return;
+                }
             }
             
             Functions.pesquisaPorContem(empresa);

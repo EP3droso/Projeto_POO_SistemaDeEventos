@@ -4,6 +4,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+import ucs.poo.trabalho_eventos.Recurso.Recurso;
 import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
 import ucs.poo.trabalho_eventos.main.Empresa;
 import ucs.poo.trabalho_eventos.main.Sistema;
@@ -89,18 +90,20 @@ public class Functions {
         
         int novoTipo =0;
 		String novoTipoString = sc.nextLine();
-		try {
-			novoTipo = Integer.parseInt(novoTipoString);
-		}
-		catch(NumberFormatException e){
-		}
 		
         if(!"".equals(novoNome)) {
         	eventoAux.setNome(novoNome);
         }
         
         //VER DA VERIFICAÇÂO DE Utilitarios.lerInteiroComVerificacao();
-        if(!"".equals(novoTipo)) {
+        if(!"".equals(novoTipoString)) {
+        	
+    		try {
+    			novoTipo = Integer.parseInt(novoTipoString);
+    		}
+    		catch(NumberFormatException e){
+    		}
+    		
     		if(novoTipo==1) {
     			eventoAux.setTipo("Festa");
     		}else if(novoTipo==2){
@@ -122,6 +125,8 @@ public class Functions {
         System.out.println("Tarefas:");
         for(Tarefa t : eventoAlvo.getTarefas()) {
         	System.out.println(eventoAlvo.getTarefas().indexOf(t) + " - " + t.getNome());
+        	System.out.println("Recursos utilizados na tarefa:");
+        	//Coloacar metodo de listar recursos do evento
         }
 	}
 	
