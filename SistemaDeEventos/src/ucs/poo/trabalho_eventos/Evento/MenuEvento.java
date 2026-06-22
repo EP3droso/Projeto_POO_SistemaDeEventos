@@ -69,52 +69,63 @@ public class MenuEvento {
         else if (escolha == 4) {
             if (empresa.getEventos().isEmpty()) {
                 System.out.println("Nenhum evento cadastrado.");
-                Functions.cadastrarEvento(empresa,sistema,eventosDB);
+                Functions.cadastrarEvento(empresa, sistema, eventosDB);
             }
-            
+
             if (empresa.getTarefasDB().isEmpty()) {
                 System.out.println("Nenhuma tarefa cadastrada no sistema.");
                 System.out.println("Deseja cadastrar uma tarefa agora? (S para sim, Enter para pular):");
                 String resposta = sc.nextLine();
-                if(resposta.equalsIgnoreCase("S")) {
-                    adicionarTarefa(empresa);
+                if (resposta.equalsIgnoreCase("S")) {
+                    adicionarTarefa(empresa, sistema);
                 } else {
                     return;
                 }
             }
-            
+
+            // Verifica novamente caso o usuário tenha pulado o cadastro
+            if (empresa.getTarefasDB().isEmpty()) return;
+
             Functions.pesquisaPorContem(empresa);
             System.out.println("Selecione o ID do evento:");
             int indexEvento = Utilitarios.lerInteiroComVerificacao();
-            Evento eventoAlvo = Functions.getEvento(indexEvento,empresa);
+            Evento eventoAlvo = Functions.getEvento(indexEvento, empresa);
             if (eventoAlvo == null) return;
 
             System.out.println("Tarefas disponíveis:");
             for (Tarefa t : empresa.getTarefasDB()) {
                 System.out.println(empresa.getTarefasDB().indexOf(t) + " - " + t.getNome());
             }
-            
-            System.out.println("Deseja adicionar uma nova tarefa?  S/N");
+
+            System.out.println("Deseja adicionar uma nova tarefa? S/N");
             String novaTarefa = sc.nextLine();
-            
-            if("S".equals(novaTarefa.toUpperCase())) adicionarTarefa(empresa);
-            
-            
+
+            if (novaTarefa.equalsIgnoreCase("S")) {
+                adicionarTarefa(empresa, sistema);
+            }
+
+            // Verifica novamente após possível cadastro
+            if (empresa.getTarefasDB().isEmpty()) return;
+
             System.out.println("Tarefas disponíveis:");
             for (Tarefa t : empresa.getTarefasDB()) {
                 System.out.println(empresa.getTarefasDB().indexOf(t) + " - " + t.getNome());
             }
-            
+
             System.out.println("ID da tarefa a cadastrar no evento:");
             int idTarefa = Utilitarios.lerInteiroComVerificacao();
-            
-            //TROCAR POR getTarefa que vai ser feito
+
+            if (idTarefa < 0 || idTarefa >= empresa.getTarefasDB().size()) {
+                System.out.println("ID inválido!");
+                return;
+            }
+
             Tarefa tarefaAux = empresa.getTarefasDB().get(idTarefa);
-            
+
             eventoAlvo.cadastrarTarefa(tarefaAux);
             System.out.println("Tarefas de " + eventoAlvo.getNome() + ":");
             eventoAlvo.listarTarefas();
-            
+
             sistema.serializarEmpresa(empresa);
         }
         

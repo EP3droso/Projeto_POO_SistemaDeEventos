@@ -27,6 +27,14 @@ public class Tarefa {
 		
 	}
 	
+	public void verificarOrdemExecucao() throws TarefaForaDeOrdemException {
+	    for (Tarefa pre : preRequesitos) {
+	        if (pre.getColaboradoresTarefas().isEmpty()) {
+	            throw new TarefaForaDeOrdemException(pre.getNome());
+	        }
+	    }
+	}
+	
 	public Tarefa(String nome) {
 		this.nome = nome;
 	}

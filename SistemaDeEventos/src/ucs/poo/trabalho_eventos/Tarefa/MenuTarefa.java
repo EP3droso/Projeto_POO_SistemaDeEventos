@@ -7,7 +7,7 @@ import ucs.poo.trabalho_eventos.main.Utilitarios;
 
 public class MenuTarefa {
 
-    public void menuTarefa(Empresa empresa, Sistema sistemas) {
+    public void menuTarefa(Empresa empresa, Sistema sistema) {
         Scanner sc = new Scanner(System.in);
         int escolha = 10;
 
@@ -18,10 +18,10 @@ public class MenuTarefa {
         }
 
         if (escolha == 1) {
-            Functions.adicionarTarefa(empresa);
+            Functions.adicionarTarefa(empresa,sistema);
         }
         else if (escolha == 2) {
-            Functions.alterarTarefa(empresa);
+            Functions.alterarTarefa(empresa,sistema);
         }
         else if (escolha == 3) {
             if (empresa.getTarefasDB().isEmpty())
@@ -33,31 +33,20 @@ public class MenuTarefa {
             if (empresa.getTarefasDB().isEmpty())
                 System.out.println("Nenhuma tarefa cadastrada no sistema para listar");
             else
-                Functions.registrarTarefas(empresa);
+                Functions.registrarTarefas(empresa,sistema);
         }
         else if (escolha == 5) {
             if (empresa.getTarefasDB().isEmpty()) {
                 System.out.println("Nenhuma tarefa cadastrada no sistema para listar");
             } else {
-                Functions.listarTarefas(empresa);
-                System.out.print("Digite o nome exato da tarefa: ");
-                String nomeTarefa = sc.nextLine();
+            	Tarefa tarefaAlvo = Functions.selecionarTarefaPorPosicao(empresa);
+            	if (tarefaAlvo == null) return;
 
-                Tarefa tarefaAlvo = null;
-                for (Tarefa t : empresa.getTarefasDB()) {
-                    if (t.getNome().equalsIgnoreCase(nomeTarefa)) {
-                        tarefaAlvo = t;
-                        break;
-                    }
-                }
-
-                if (tarefaAlvo == null) {
-                    System.out.println("Tarefa não encontrada!");
-                } else if (empresa.getRecursosDB().isEmpty()) {
-                    System.out.println("Nenhum recurso cadastrado no sistema.");
-                } else {
-                    Functions.registrarRecursos(tarefaAlvo, empresa.getRecursosDB());
-                }
+            	if (empresa.getRecursosDB().isEmpty()) {
+            	    System.out.println("Nenhum recurso cadastrado no sistema.");
+            	} else {
+            	    Functions.registrarRecursos(tarefaAlvo, empresa.getRecursosDB(),empresa,sistema);
+            	}
             }
         }
         else if (escolha == 6) {
@@ -82,7 +71,7 @@ public class MenuTarefa {
             if (empresa.getTarefasDB().isEmpty())
                 System.out.println("Nenhuma tarefa cadastrada no sistema para deletar");
             else
-                Functions.excluirTarefa(empresa);
+                Functions.excluirTarefa(empresa,sistema);
         }
     }
 }

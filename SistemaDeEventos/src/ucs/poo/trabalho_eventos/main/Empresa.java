@@ -1,18 +1,12 @@
 package ucs.poo.trabalho_eventos.main;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ucs.poo.trabalho_eventos.Colaborador.Colaborador;
 import ucs.poo.trabalho_eventos.Evento.Evento;
 import ucs.poo.trabalho_eventos.Recurso.Recurso;
-import ucs.poo.trabalho_eventos.Relacionamentos.ColaboradorTarefa;
-import ucs.poo.trabalho_eventos.Relacionamentos.RecursoTarefa;
-import ucs.poo.trabalho_eventos.Relatorio.RelatorioInterface;
+import ucs.poo.trabalho_eventos.Relacionamentos.HistoricoUsoRecurso;
 import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
 
 public class Empresa{
@@ -22,7 +16,9 @@ public class Empresa{
 	private List<Colaborador> colaboradores;
 	private List<Tarefa> tarefasDB;
 	private List<Recurso> recursosDB;
-	
+	private List<HistoricoUsoRecurso> historicoUsoRecursos = new ArrayList<>();
+
+
 	private int idAtualEventos=0;
 	private int idAtualEColaboradores=0;
 	private int idAtualTarefas=0;
@@ -31,6 +27,13 @@ public class Empresa{
 	
 	public int getIdAtualEventos() {
 		return idAtualEventos;
+	}
+	
+	public List<HistoricoUsoRecurso> getHistoricoUsoRecursos() {
+	    return historicoUsoRecursos;
+	}
+	public void setHistoricoUsoRecursos(List<HistoricoUsoRecurso> historicoUsoRecursos) {
+	    this.historicoUsoRecursos = historicoUsoRecursos;
 	}
 
 

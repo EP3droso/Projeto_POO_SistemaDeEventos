@@ -1,25 +1,27 @@
 package ucs.poo.trabalho_eventos.Recurso;
 
 import java.util.Scanner;
+
 import ucs.poo.trabalho_eventos.Relacionamentos.RecursoTarefa;
 import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
 import ucs.poo.trabalho_eventos.main.Empresa;
+import ucs.poo.trabalho_eventos.main.Sistema;
 import ucs.poo.trabalho_eventos.main.Utilitarios;
 
 public class Functions {
 
-    public static void listarRecursos(Empresa empresa, String nomeRecurso) {
-        System.out.println("\n---------------------------------------------");
-        boolean achou = false;
-        for (Recurso recurso : empresa.getRecursosDB()) {
-            if (recurso.getNome().equalsIgnoreCase(nomeRecurso)) {
-                System.out.println(recurso.getId() + " - " + recurso.getNome() + " - " + recurso.getTipo() + " - " + recurso.getQuantidade());
-                achou = true;
-            }
-        }
-        if (!achou) System.out.println("Recurso não cadastrado, ou não encontrado");
-        System.out.println("\n");
-    }
+	public static void listarRecursos(Empresa empresa, String nomeRecurso) {
+	    System.out.println("\n---------------------------------------------");
+	    boolean achou = false;
+	    for (Recurso recurso : empresa.getRecursosDB()) {
+	        if (recurso.getNome().toLowerCase().contains(nomeRecurso.toLowerCase())) {
+	            System.out.println(recurso.getId() + " - " + recurso.getNome() + " - " + recurso.getTipo() + " - " + recurso.getQuantidade());
+	            achou = true;
+	        }
+	    }
+	    if (!achou) System.out.println("Recurso não cadastrado, ou não encontrado");
+	    System.out.println("\n");
+	}
 
     public static void listarRecursos(Empresa empresa, int idRecurso) {
         System.out.println("\n---------------------------------------------");
@@ -43,7 +45,7 @@ public class Functions {
         }
     }
 
-    public static void adicionarRecurso(Empresa empresa) {
+    public static void adicionarRecurso(Empresa empresa, Sistema sistema) {
         Scanner sc = new Scanner(System.in);
         listarRecursos(empresa);
 
@@ -75,9 +77,10 @@ public class Functions {
 
         empresa.getRecursosDB().add(novoRecurso);
         System.out.println("Recurso '" + nome + "' (ID: " + novoRecurso.getId() + ") adicionado com sucesso!");
+        sistema.serializarEmpresa(empresa);
     }
 
-    public static void excluirRecurso(Empresa empresa) {
+    public static void excluirRecurso(Empresa empresa,Sistema sistema) {
         Scanner sc = new Scanner(System.in);
 
         if (empresa.getRecursosDB().isEmpty()) {
@@ -112,9 +115,10 @@ public class Functions {
 
         empresa.getRecursosDB().remove(recursoParaRemover);
         System.out.println("Recurso '" + recursoParaRemover.getNome() + "' removido com sucesso!");
+        sistema.serializarEmpresa(empresa);
     }
 
-    public static void alterarRecurso(Empresa empresa) {
+    public static void alterarRecurso(Empresa empresa,Sistema sistema) {
         Scanner sc = new Scanner(System.in);
 
         if (empresa.getRecursosDB().isEmpty()) {
@@ -146,8 +150,14 @@ public class Functions {
         if (escolha == 0) return;
 
         if (escolha == 1) {
-            System.out.println("Insira o novo nome:");
+            System.out.println("Insira o novo nome (Enter para manter '" + recursoAlvo.getNome() + "'):");
             String novoNome = sc.nextLine();
+            
+            if (novoNome.isBlank()) {
+                System.out.println("Nome mantido: '" + recursoAlvo.getNome() + "'");
+                return;
+            }
+            
             for (Recurso r : empresa.getRecursosDB()) {
                 if (r.getNome().equalsIgnoreCase(novoNome)) {
                     System.out.println("Erro: Já existe um recurso com esse nome.");
@@ -158,21 +168,38 @@ public class Functions {
             System.out.println("Nome alterado para '" + novoNome + "'!");
         }
         else if (escolha == 2) {
-            System.out.println("Novo tipo: ");
+            System.out.println("Novo tipo (Enter para manter '" + recursoAlvo.getTipo() + "'): ");
             String novoTipo = sc.nextLine();
+            
+            if (novoTipo.isBlank()) {
+                System.out.println("Tipo mantido: '" + recursoAlvo.getTipo() + "'");
+                return;
+            }
             recursoAlvo.setTipo(novoTipo);
-            System.out.println("Tipo alterado para " + novoTipo);
+            System.out.println("Tipo alterado para '" + novoTipo + "'!");
         }
         else if (escolha == 3) {
             System.out.println("Quantidade atual: " + recursoAlvo.getQuantidade());
-            System.out.println("Nova quantidade:");
-            int novaQtd = Utilitarios.lerInteiroComVerificacao();
-            if (novaQtd < 0) {
-                System.out.println("Erro: quantidade não pode ser negativa.");
-            } else {
-                recursoAlvo.setQuantidade(novaQtd);
-                System.out.println("Quantidade alterada para " + novaQtd);
+            System.out.println("Nova quantidade (Enter para manter):");
+            String entrada = sc.nextLine();
+            
+            if (entrada.isBlank()) {
+                System.out.println("Quantidade mantida: " + recursoAlvo.getQuantidade());
+                return;
+            }
+            
+            try {
+                int novaQtd = Integer.parseInt(entrada);
+                if (novaQtd < 0) {
+                    System.out.println("Erro: quantidade não pode ser negativa.");
+                } else {
+                    recursoAlvo.setQuantidade(novaQtd);
+                    System.out.println("Quantidade alterada para " + novaQtd);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida, quantidade mantida: " + recursoAlvo.getQuantidade());
             }
         }
+        sistema.serializarEmpresa(empresa);
     }
 }

@@ -19,13 +19,13 @@ public class MenuRecurso {
         }
 
         if (escolha == 1) {
-            Functions.adicionarRecurso(empresa);
+            Functions.adicionarRecurso(empresa,sistema);
         }
         else if (escolha == 2) {
-            Functions.excluirRecurso(empresa);
+            Functions.excluirRecurso(empresa,sistema);
         }
         else if (escolha == 3) {
-            Functions.alterarRecurso(empresa);
+            Functions.alterarRecurso(empresa,sistema);
         }
         else if (escolha == 4) {
             if (empresa.getRecursosDB().isEmpty())

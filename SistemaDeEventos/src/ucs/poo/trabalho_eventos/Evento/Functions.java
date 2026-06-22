@@ -1,10 +1,9 @@
 package ucs.poo.trabalho_eventos.Evento;
 
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import ucs.poo.trabalho_eventos.Recurso.Recurso;
+import ucs.poo.trabalho_eventos.Relacionamentos.RecursoTarefa;
 import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
 import ucs.poo.trabalho_eventos.main.Empresa;
 import ucs.poo.trabalho_eventos.main.Sistema;
@@ -126,7 +125,13 @@ public class Functions {
         for(Tarefa t : eventoAlvo.getTarefas()) {
         	System.out.println(eventoAlvo.getTarefas().indexOf(t) + " - " + t.getNome());
         	System.out.println("Recursos utilizados na tarefa:");
-        	//Coloacar metodo de listar recursos do evento
+        	if (t.getRecursosTarefas().isEmpty()) {
+        	    System.out.println("  Nenhum recurso vinculado.");
+        	} else {
+        	    for (RecursoTarefa rt : t.getRecursosTarefas()) {
+        	        System.out.println("  - " + rt.getRecurso().getNome() + " | Qtd: " + rt.getRecurso().getQuantidade());
+        	    }
+        	}
         }
 	}
 	
