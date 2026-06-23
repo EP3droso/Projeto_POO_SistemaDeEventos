@@ -1,12 +1,6 @@
 package ucs.poo.trabalho_eventos.Colaborador;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 public class Colaborador {
-
-   
 
     private int id;
     private String nome;
@@ -14,7 +8,7 @@ public class Colaborador {
     private String senha;
     private String funcao;
 
-    public Colaborador(String nome, String email, String senha, String funcao,int id) {
+    public Colaborador(String nome, String email, String senha, String funcao, int id) {
         if (nome == null || nome.isBlank())
             throw new IllegalArgumentException("Nome do colaborador não pode ser vazio.");
         if (email == null || email.isBlank())
@@ -29,53 +23,24 @@ public class Colaborador {
         this.email = email;
         this.senha = senha;
         this.funcao = funcao;
-    }
-    
+    } 
+ 
     public Colaborador() {
     }
- 
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public int getId() { 
-        return id; 
-    }
-
-    public String getNome() { 
-        return nome; 
-    }
-    
-    public void setNome(String nome) { 
-        this.nome = nome; 
-    }
-    public String getEmail() {
-        return email; 
-    }
-
-    public void setEmail(String email) { 
-        this.email = email; 
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) { 
-        this.senha = senha; 
-    }
-
-    public String getFuncao() { 
-        return funcao; 
-    }
-
-    public void setFuncao(String funcao) {
-        this.funcao = funcao; 
-    }
+    public void setId(int id) { this.id = id; }
+    public int getId() { return id; }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
+    public String getFuncao() { return funcao; }
+    public void setFuncao(String funcao) { this.funcao = funcao; }
 
     @Override
     public String toString() {
-        return String.format("Colaborador{id=%d, nome='%s', email='%s', funcao='%s'}", id, nome, email, funcao);
+        return "ID: " + this.id + " | Nome: " + this.nome + " | Email: " + this.email + " | Função: " + this.funcao;
     }
 }
