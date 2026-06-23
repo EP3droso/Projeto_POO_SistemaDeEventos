@@ -26,7 +26,7 @@ public class MenuEvento {
             		+ "4 - Cadastrar Tarefa no Evento\n"
             		+ "5 - Excluir Tarefa do Evento\n"
             		+ "6 - Ver evento\n"
-            		+ "7 - Listar evntos\n");
+            		+ "7 - Listar eventos\n");
             escolha = Utilitarios.lerInteiroComVerificacao();
         }
 
