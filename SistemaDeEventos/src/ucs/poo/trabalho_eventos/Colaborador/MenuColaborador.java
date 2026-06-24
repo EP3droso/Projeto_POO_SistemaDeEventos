@@ -52,17 +52,19 @@ public class MenuColaborador {
         
         else if (escolha == 4) {
             if (Functions.colaboradoresIsEmpty(empresa)) return;
-            Functions.listarColaboradores(empresa);
-            System.out.println("Digite o ID do colaborador a excluir:");
+            Functions.pesquisaPorContem(empresa);
+            System.out.println("Digite o ID do colaborador a excluir(Enter para retornar ao menu principal):");
             int idColab = Utilitarios.lerInteiroComVerificacao();
+            if(idColab == -1) return;
             Functions.excluirColaborador(idColab, empresa, sistema);
         }
         
         else if (escolha == 5) {
             if (Functions.colaboradoresIsEmpty(empresa)) return;
-            Functions.listarColaboradores(empresa);
-            System.out.println("Digite o ID do colaborador a alterar:");
+            Functions.pesquisaPorContem(empresa);
+            System.out.println("Digite o ID do colaborador a alterar(Enter para retornar ao menu principal):");
             int idColab = Utilitarios.lerInteiroComVerificacao();
+            if(idColab == -1) return;
             Colaborador colabAlvo = Functions.getColaborador(idColab, empresa);
             
             if (colabAlvo == null) return;

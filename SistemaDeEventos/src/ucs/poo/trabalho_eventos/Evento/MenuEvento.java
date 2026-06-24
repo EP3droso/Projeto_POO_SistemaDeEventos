@@ -1,185 +1,203 @@
 package ucs.poo.trabalho_eventos.Evento;
 
+import static ucs.poo.trabalho_eventos.Tarefa.Functions.adicionarTarefa;
+
 import java.util.List;
 import java.util.Scanner;
+
 import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
 import ucs.poo.trabalho_eventos.main.Empresa;
-import ucs.poo.trabalho_eventos.main.Utilitarios;
 import ucs.poo.trabalho_eventos.main.Sistema;
-import static ucs.poo.trabalho_eventos.Tarefa.Functions.adicionarTarefa;
+import ucs.poo.trabalho_eventos.main.Utilitarios;
 
 public class MenuEvento {
 
     public void menuEvento(Empresa empresa, Sistema sistema) {
-    	
-    	List<Evento> eventosDB = empresa.getEventos();
+
+        List<Evento> eventosDB = empresa.getEventos();
         Scanner sc = new Scanner(System.in);
         int escolha = 10;
-       
-        while (escolha < 0 || escolha > 7) {
+
+        while (escolha < 0 || escolha > 8) {
             System.out.println("\n---------------------------------------------");
             System.out.println("MENU de Eventos\n"
-            		+ "0 - Voltar ao Menu\n"
-            		+ "1 - Cadastrar Evento\n"
-            		+ "2 - Excluir Evento\n"
-            		+ "3 - Alterar Evento\n"
-            		+ "4 - Cadastrar Tarefa no Evento\n"
-            		+ "5 - Excluir Tarefa do Evento\n"
-            		+ "6 - Ver evento\n"
-            		+ "7 - Listar eventos\n");
+                    + "0 - Voltar ao Menu\n"
+                    + "1 - Cadastrar Evento\n"
+                    + "2 - Excluir Evento\n"
+                    + "3 - Alterar Evento\n"
+                    + "4 - Cadastrar Tarefa no Evento\n"
+                    + "5 - Excluir Tarefa do Evento\n"
+                    + "6 - Registrar Execução de Tarefa\n"
+                    + "7 - Ver Evento\n"
+                    + "8 - Listar Eventos\n");
             escolha = Utilitarios.lerInteiroComVerificacao();
         }
 
         if (escolha == 0) {
             return;
         }
-        
+
         else if (escolha == 1) {
-        	Functions.cadastrarEvento(empresa,sistema,eventosDB);
+            Functions.cadastrarEvento(empresa, sistema, eventosDB);
         }
-        
+
         else if (escolha == 2) {
-            if (Functions.eventosIsEmpty(empresa)) {
-                return;
-            }
-            
-            Functions.pesquisaPorContem(empresa);
-            System.out.println("Selecione o ID do evento a excluir:");
-            int idEvento = Utilitarios.lerInteiroComVerificacao();
-            Functions.excluirEvento(idEvento,empresa,sistema);
+            if (Functions.eventosIsEmpty(empresa)) return;
 
+            Functions.pesquisaPorContem(empresa);
+            System.out.println("Selecione o ID do evento a excluir(Enter para retoronar ao menu principal):");
+            int idEvento = Utilitarios.lerInteiroComVerificacao();
+            if(idEvento == -1) return;
+            Functions.excluirEvento(idEvento, empresa, sistema);
         }
-        
+
         else if (escolha == 3) {
-        	if (Functions.eventosIsEmpty(empresa)) {
+            if (Functions.eventosIsEmpty(empresa)) {
                 Functions.cadastrarEvento(empresa, sistema, eventosDB);
-            }
-        	
-            Functions.pesquisaPorContem(empresa);
-            System.out.println("Selecione o ID do evento a alterar:");
-            int idEvento = Utilitarios.lerInteiroComVerificacao();
-            Evento eventoAlvo = Functions.getEvento(idEvento,empresa);
-            
-            if (eventoAlvo == null) return;
-            
-            Functions.alterarEvento(eventoAlvo,empresa,sistema);
-            
-        }
-        
-        else if (escolha == 4) {
-            if (empresa.getEventos().isEmpty()) {
-                System.out.println("Nenhum evento cadastrado.");
-                Functions.cadastrarEvento(empresa, sistema, eventosDB);
-            }
-
-            if (empresa.getTarefasDB().isEmpty()) {
-                System.out.println("Nenhuma tarefa cadastrada no sistema.");
-                System.out.println("Deseja cadastrar uma tarefa agora? (S para sim, Enter para pular):");
-                String resposta = sc.nextLine();
-                if (resposta.equalsIgnoreCase("S")) {
-                    adicionarTarefa(empresa, sistema);
-                } else {
-                    return;
-                }
-            }
-
-            // Verifica novamente caso o usuário tenha pulado o cadastro
-            if (empresa.getTarefasDB().isEmpty()) return;
-
-            Functions.pesquisaPorContem(empresa);
-            System.out.println("Selecione o ID do evento:");
-            int indexEvento = Utilitarios.lerInteiroComVerificacao();
-            Evento eventoAlvo = Functions.getEvento(indexEvento, empresa);
-            if (eventoAlvo == null) return;
-
-            System.out.println("Tarefas disponíveis:");
-            for (Tarefa t : empresa.getTarefasDB()) {
-                System.out.println(empresa.getTarefasDB().indexOf(t) + " - " + t.getNome());
-            }
-
-            System.out.println("Deseja adicionar uma nova tarefa? S/N");
-            String novaTarefa = sc.nextLine();
-
-            if (novaTarefa.equalsIgnoreCase("S")) {
-                adicionarTarefa(empresa, sistema);
-            }
-
-            // Verifica novamente após possível cadastro
-            if (empresa.getTarefasDB().isEmpty()) return;
-
-            System.out.println("Tarefas disponíveis:");
-            for (Tarefa t : empresa.getTarefasDB()) {
-                System.out.println(empresa.getTarefasDB().indexOf(t) + " - " + t.getNome());
-            }
-
-            System.out.println("ID da tarefa a cadastrar no evento:");
-            int idTarefa = Utilitarios.lerInteiroComVerificacao();
-
-            if (idTarefa < 0 || idTarefa >= empresa.getTarefasDB().size()) {
-                System.out.println("ID inválido!");
                 return;
             }
 
-            Tarefa tarefaAux = empresa.getTarefasDB().get(idTarefa);
+            Functions.pesquisaPorContem(empresa);
+            System.out.println("Selecione o ID do evento a alterar(Enter para retoronar ao menu principal):");
+            int idEvento = Utilitarios.lerInteiroComVerificacao();
+            if(idEvento == -1) return;
+            Evento eventoAlvo = Functions.getEvento(idEvento, empresa);
 
-            eventoAlvo.cadastrarTarefa(tarefaAux);
-            System.out.println("Tarefas de " + eventoAlvo.getNome() + ":");
-            eventoAlvo.listarTarefas();
+            if (eventoAlvo == null) return;
 
-            sistema.serializarEmpresa(empresa);
+            Functions.alterarEvento(eventoAlvo, empresa, sistema);
         }
-        
+
+        else if (escolha == 4) {
+        	try {
+	            if (empresa.getEventos().isEmpty()) {
+	                System.out.println("Nenhum evento cadastrado.");
+	                Functions.cadastrarEvento(empresa, sistema, eventosDB);
+	            }
+	
+	            if (empresa.getTarefasDB().isEmpty()) {
+	                System.out.println("Nenhuma tarefa cadastrada no sistema.");
+	                System.out.println("Cadastro de Tarefa:");
+	                adicionarTarefa(empresa, sistema);
+	                System.out.println("Perfeito! Agora vamos cadastrar a tarefa no evento");
+	
+	            }
+	
+	            if (empresa.getTarefasDB().isEmpty()) return;
+	
+	            Functions.pesquisaPorContem(empresa);
+	            System.out.println("Selecione o ID do evento:");
+	            int indexEvento = Utilitarios.lerInteiroComVerificacao();
+	            if(indexEvento == -1) return;
+	            
+	            Evento eventoAlvo = Functions.getEvento(indexEvento, empresa);
+	            if (eventoAlvo == null) return;
+	
+	            System.out.println("Tarefas disponíveis:");
+	            for (Tarefa t : empresa.getTarefasDB()) {
+	                System.out.println(empresa.getTarefasDB().indexOf(t) + " - " + t.getNome());
+	            }
+	
+	            System.out.println("Deseja adicionar uma nova tarefa? S/N");
+	            String novaTarefa = sc.nextLine();
+	
+	            if (novaTarefa.equalsIgnoreCase("S")) {
+	                adicionarTarefa(empresa, sistema);
+	            }
+	
+	            if (empresa.getTarefasDB().isEmpty()) return;
+	
+	            System.out.println("Tarefas disponíveis:");
+	            for (Tarefa t : empresa.getTarefasDB()) {
+	                System.out.println(empresa.getTarefasDB().indexOf(t) + " - " + t.getNome());
+	            }
+	            
+	
+	            System.out.println("ID da tarefa a cadastrar no evento:");
+	            int idTarefa = Utilitarios.lerInteiroComVerificacao();
+	            if(eventoAlvo.getTarefa(idTarefa) != null) {
+	            	throw new TarefaRepetidaException();
+	            }
+	
+	            if (idTarefa < 0 || idTarefa >= empresa.getTarefasDB().size()) {
+	                System.out.println("ID inválido!");
+	                return;
+	            }
+	
+	            Tarefa tarefaAux = empresa.getTarefasDB().get(idTarefa);
+	            eventoAlvo.cadastrarTarefa(tarefaAux);
+	            System.out.println("Tarefa cadastrada no evento com sucesso!");
+	            System.out.println("Tarefas de " + eventoAlvo.getNome() + ":");
+	            eventoAlvo.listarTarefas();
+	
+	            sistema.serializarEmpresa(empresa);
+        	}
+        	catch(TarefaRepetidaException e){
+        		System.out.println(e.getMessage());
+        	}
+        }
 
         else if (escolha == 5) {
             if (Functions.eventosIsEmpty(empresa)) {
                 Functions.cadastrarEvento(empresa, sistema, eventosDB);
+                return;
             }
-            
+
             Functions.pesquisaPorContem(empresa);
             System.out.println("Selecione o ID do evento:");
             int idEvento = Utilitarios.lerInteiroComVerificacao();
-            Evento eventoAlvo = Functions.getEvento(idEvento,empresa);
+            if(idEvento == -1) return;
+            Evento eventoAlvo = Functions.getEvento(idEvento, empresa);
             if (eventoAlvo == null) return;
 
             if (eventoAlvo.getTarefas().isEmpty()) {
                 System.out.println("Nenhuma tarefa cadastrada no evento.");
                 return;
             }
-            
+
             eventoAlvo.listarTarefas();
-            System.out.println("ID da tarefa a excluir:");
+            System.out.println("ID da tarefa a excluir(Enter para voltar ao menu principal):");
             int idTarefa = Utilitarios.lerInteiroComVerificacao();
-            
-            if (eventoAlvo.getTarefa(idTarefa-1) != null) {
-                eventoAlvo.excluirTarefa(idTarefa-1);
+            if(idEvento == -1) return;
+            if (eventoAlvo.getTarefa(idTarefa - 1) != null) {
+                eventoAlvo.excluirTarefa(idTarefa - 1);
                 System.out.println("Tarefas de " + eventoAlvo.getNome() + ":");
                 eventoAlvo.listarTarefas();
-                
                 sistema.serializarEmpresa(empresa);
-            } 
-        }
-        
-        else if(escolha == 6) {
-        	if (Functions.eventosIsEmpty(empresa)) {
-                Functions.cadastrarEvento(empresa, sistema, eventosDB);
             }
-        	
-        	Functions.pesquisaPorContem(empresa);
-        	System.out.println("Selecione o ID do evento:");
+        }
+
+        else if (escolha == 6) {
+            if (Functions.eventosIsEmpty(empresa)) return;
+
+            Functions.pesquisaPorContem(empresa);
+            System.out.println("Selecione o ID do evento(Enter para retornar ao menu principal):");
             int idEvento = Utilitarios.lerInteiroComVerificacao();
-            Evento eventoAlvo = Functions.getEvento(idEvento,empresa);
+            if(idEvento == -1) return;
+            Evento eventoAlvo = Functions.getEvento(idEvento, empresa);
             if (eventoAlvo == null) return;
-            
+
+            Functions.registrarTarefas(eventoAlvo, empresa, sistema);
+        }
+
+        else if (escolha == 7) {
+            if (Functions.eventosIsEmpty(empresa)) return;
+
+            Functions.pesquisaPorContem(empresa);
+            System.out.println("Selecione o ID do evento:");
+            int idEvento = Utilitarios.lerInteiroComVerificacao();
+            Evento eventoAlvo = Functions.getEvento(idEvento, empresa);
+            if (eventoAlvo == null) return;
+
             Functions.mostrarInfoEvento(eventoAlvo, empresa);
         }
-        
-        else if(escolha == 7) {
-        	for(Evento aux : empresa.getEventos()) {
-        		Functions.mostrarInfoEvento(aux, empresa);
-        	}
+
+        else if (escolha == 8) {
+            if (Functions.eventosIsEmpty(empresa)) return;
+
+            for (Evento aux : empresa.getEventos()) {
+                Functions.mostrarInfoEvento(aux, empresa);
+            }
         }
     }
-    
-    
-    
 }

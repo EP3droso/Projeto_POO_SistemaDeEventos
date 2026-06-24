@@ -1,13 +1,17 @@
 package ucs.poo.trabalho_eventos.Relacionamentos;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+
 import ucs.poo.trabalho_eventos.Recurso.Recurso;
 import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
 
 public class RecursoTarefa {
     private Date horaIni;
     private Date horaFim;
+    @JsonIdentityReference(alwaysAsId = true)
     private Recurso recurso;
+    @JsonIdentityReference(alwaysAsId = true)
     private Tarefa tarefa;
 
     public RecursoTarefa(Recurso recurso, Tarefa tarefa) {

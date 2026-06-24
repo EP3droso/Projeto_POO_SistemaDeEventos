@@ -89,8 +89,9 @@ public class Functions {
         }
 
         listarRecursos(empresa);
-        System.out.println("Id do Recurso a ser Removido: ");
+        System.out.println("Id do Recurso a ser Removido(Enter para retoronar ao menu principal): ");
         int idRecurso = Utilitarios.lerInteiroComVerificacao();
+        if(idRecurso == -1) return;
 
         Recurso recursoParaRemover = null;
         for (Recurso r : empresa.getRecursosDB()) {
@@ -127,8 +128,9 @@ public class Functions {
         }
 
         listarRecursos(empresa);
-        System.out.println("Id do Recurso a ser alterado: ");
+        System.out.println("Id do Recurso a ser alterado(Enter para retoronar ao menu principal): ");
         int idRecurso = Utilitarios.lerInteiroComVerificacao();
+        if(idRecurso == -1) return;
 
         Recurso recursoAlvo = null;
         for (Recurso r : empresa.getRecursosDB()) {

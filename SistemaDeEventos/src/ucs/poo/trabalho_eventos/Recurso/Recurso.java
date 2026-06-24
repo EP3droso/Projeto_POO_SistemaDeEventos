@@ -2,8 +2,18 @@ package ucs.poo.trabalho_eventos.Recurso;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+
 import ucs.poo.trabalho_eventos.Relacionamentos.RecursoTarefa;
 
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id",
+    scope = Recurso.class
+)
 public class Recurso {
 	private static int contadorId = 1; 
 	

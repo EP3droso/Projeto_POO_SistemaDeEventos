@@ -3,8 +3,17 @@ package ucs.poo.trabalho_eventos.Evento;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
 
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id",
+    scope = Evento.class
+)
 public class Evento {
 		
 	private int id;
@@ -17,6 +26,7 @@ public class Evento {
 	public Evento(String nome, int i,int id){
 		this(); 
 		this.nome = nome;
+		this.id=id;
 		if(i==1) {
 			this.tipoEvento = "Festa";
 		}else if(i==2){
@@ -71,12 +81,12 @@ public class Evento {
 		}
 	}
 	
+	@JsonIgnore
 	public Tarefa getTarefa(int id){
 		try {
 		return this.tarefas.get(id);
 		}
 		catch(IndexOutOfBoundsException e) {
-			System.out.println("Não existe uma tarefa com esse ID");
 			return null;
 		}
 	}

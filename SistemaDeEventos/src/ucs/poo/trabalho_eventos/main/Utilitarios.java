@@ -14,8 +14,14 @@ public abstract class Utilitarios {
 			return intEntrada;
 		}
 		catch(NumberFormatException e){
-			System.out.println("Entrada não é um numero");
+			if("".equals(stringEntrada)) {
+				System.out.println("Retornando ao menu principal");
+			}
+			else {
+				System.out.println("Entrada não é um numero");
+			}
 			return -1;
 		}
 	}
+	
 }

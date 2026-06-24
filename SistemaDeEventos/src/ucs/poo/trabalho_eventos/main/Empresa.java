@@ -3,12 +3,15 @@ package ucs.poo.trabalho_eventos.main;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import ucs.poo.trabalho_eventos.Colaborador.Colaborador;
 import ucs.poo.trabalho_eventos.Evento.Evento;
 import ucs.poo.trabalho_eventos.Recurso.Recurso;
 import ucs.poo.trabalho_eventos.Relacionamentos.HistoricoUsoRecurso;
 import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
 
+@JsonPropertyOrder({"nome", "colaboradores", "recursosDB", "tarefasDB", "eventos"})
 public class Empresa{
 	
 	private String nome;

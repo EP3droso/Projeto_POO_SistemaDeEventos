@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.util.Date;
 
@@ -14,9 +16,14 @@ import ucs.poo.trabalho_eventos.Relacionamentos.ColaboradorTarefa;
 import ucs.poo.trabalho_eventos.Relacionamentos.RecursoTarefa;
 import ucs.poo.trabalho_eventos.main.Utilitarios;
 
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id",  
+    scope = Tarefa.class
+)
 public class Tarefa {
 	
-	int id = 0;
+	int id;
 	private String nome;
 	List<Tarefa> preRequesitos = new ArrayList<>();
 	List<RecursoTarefa> recursosTarefas = new ArrayList<>();
@@ -35,7 +42,8 @@ public class Tarefa {
 	    }
 	}
 	
-	public Tarefa(String nome) {
+	public Tarefa(String nome,int id) {
+		this.id = id;
 		this.nome = nome;
 	}
 

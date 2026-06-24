@@ -1,5 +1,13 @@
 package ucs.poo.trabalho_eventos.Colaborador;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id",
+    scope = Colaborador.class
+)
 public class Colaborador {
 
     private int id;

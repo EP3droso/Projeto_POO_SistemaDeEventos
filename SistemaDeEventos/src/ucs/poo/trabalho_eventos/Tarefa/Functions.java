@@ -40,8 +40,9 @@ public class Functions {
             return null;
         }
 
-        System.out.println("Selecione o número da tarefa:");
+        System.out.println("Selecione o número da tarefa(Enter para retornar ao menu principal):");
         int posicao = Utilitarios.lerInteiroComVerificacao();
+        if(posicao == -1) return null;
 
         if (posicao < 0 || posicao >= filtradas.size()) {
             System.out.println("Posição inválida!");
@@ -105,7 +106,9 @@ public class Functions {
             }
 
             if (loop) {
-                Tarefa tarefaAux = new Tarefa(nomeTarefa);
+            	
+                Tarefa tarefaAux = new Tarefa(nomeTarefa,empresa.getIdAtualTarefas());
+                empresa.setIdAtualTarefas(empresa.getIdAtualTarefas()+1);
 
                 while (loop) {
                     List<Tarefa> disponiveis = new ArrayList<>();
@@ -121,38 +124,29 @@ public class Functions {
                         break;
                     }
 
-                    System.out.println("Dentre as tarefas existentes, indique o nome das quais são pre-requisitos (digite 1 por vez) (Digite 0 para finalizar):");
-                    int cont = 1;
+                    System.out.println("Dentre as tarefas existentes, indique quais são pre-requisitos (digite 1 por vez) (Digite Enter para finalizar):");
                     for (Tarefa t1 : disponiveis) {
-                        System.out.println(cont + " - " + t1.getNome());
-                        cont++;
+                        System.out.println(disponiveis.indexOf(t1) + " - " + t1.getNome());
                     }
 
-                    String nomePreRequisito = "";
+                    int idPreRquisito;
                     Tarefa tarefaEncontrada = null;
                     boolean achou = false;
 
-                    while (!achou) {
-                        System.out.print("Nome do pré-requisito: ");
-                        nomePreRequisito = sc.nextLine();
+                    while((idPreRquisito = Utilitarios.lerInteiroComVerificacao()) != -1) {
+                        
+                        try {
+                        	tarefaEncontrada = disponiveis.get(idPreRquisito);
+                        	break;
+                        }
+                        catch(IndexOutOfBoundsException e) {
+                            System.out.println("Tarefa inválida, inexistente ou já adicionada! Tente novamente ou digite Enter para encerrar.");
 
-                        if (nomePreRequisito.equals("0")) {
-                            loop = false;
-                            break;
                         }
-                        for (Tarefa t1 : disponiveis) {
-                            if (t1.getNome().equalsIgnoreCase(nomePreRequisito)) {
-                                achou = true;
-                                tarefaEncontrada = t1;
-                                break;
-                            }
-                        }
-                        if (!achou) {
-                            System.out.println("Tarefa inválida, inexistente ou já adicionada! Tente novamente ou digite 0 para encerrar.");
-                        }
+
                     }
 
-                    if (tarefaEncontrada != null && tarefaAux.setPreRequisito(tarefaEncontrada)) {
+                    if (tarefaAux.setPreRequisito(tarefaEncontrada)) {
                         System.out.println("Pré-requisito '" + tarefaEncontrada.getNome() + "' adicionado!\n");
                     }
                 }
@@ -178,8 +172,9 @@ public class Functions {
                 System.out.println("Tarefa '" + nomeTarefa + "' criada com sucesso!");
             }
         } else {
-            Tarefa tarefaAux = new Tarefa(nomeTarefa);
-
+            Tarefa tarefaAux = new Tarefa(nomeTarefa,empresa.getIdAtualTarefas());
+            empresa.setIdAtualTarefas(empresa.getIdAtualTarefas()+1);
+            
             if (empresa.getRecursosDB().isEmpty()) {
                 System.out.println("Nenhum recurso cadastrado no sistema.");
                 System.out.println("Deseja cadastrar um recurso agora? (S para sim, Enter para pular):");
@@ -372,125 +367,6 @@ public class Functions {
         sistema.serializarEmpresa(empresa);
     }
 
-    public static void registrarTarefas(Empresa empresa, Sistema sistema) {
-        Scanner sc = new Scanner(System.in);
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
-        sdf.setLenient(false);
-
-        System.out.println("Selecione a tarefa que deseja registrar a execução:");
-        Tarefa tarefaAlvo = selecionarTarefaPorPosicao(empresa);
-        if (tarefaAlvo == null) return;
-
-        // Verifica ordem de execução (pré-requisitos)
-        try {
-            tarefaAlvo.verificarOrdemExecucao();
-        } catch (TarefaForaDeOrdemException e) {
-            System.out.println("Erro: " + e.getMessage());
-            System.out.println("Finalize a tarefa '" + e.getNomeTarefaBloqueante() + "' antes de continuar.");
-            return;
-        }
-
-        if (tarefaAlvo.getRecursosTarefas().isEmpty()) {
-            System.out.println("Aviso: Esta tarefa não possui recursos vinculados, mas o horário será registrado nos metadados.");
-        }
-
-        System.out.println("\nCOLABORADORES CADASTRADOS:");
-        // empresa.mostrarColaboradores();
-
-        System.out.print("Digite o ID do colaborador responsável: ");
-        int idColaborador = Utilitarios.lerInteiroComVerificacao();
-        Colaborador colaborador = empresa.getColaboradores().get(idColaborador);
-
-        java.util.Date dataInicio = null;
-        java.util.Date dataFim = null;
-
-        while (dataInicio == null) {
-            System.out.print("Insira a data e hora de INÍCIO (formato: DD/MM/AAAA HH:MM): ");
-            String strInicio = sc.nextLine();
-            try {
-                dataInicio = sdf.parse(strInicio);
-            } catch (java.text.ParseException e) {
-                System.out.println("Formato de data/hora inválido! Tente novamente.");
-            }
-        }
-
-        while (dataFim == null) {
-            System.out.print("Insira a data e hora de TÉRMINO (formato: DD/MM/AAAA HH:MM): ");
-            String strFim = sc.nextLine();
-            try {
-                dataFim = sdf.parse(strFim);
-                if (dataFim.before(dataInicio)) {
-                    System.out.println("Erro: A data de término não pode ser anterior à data de início!");
-                    dataFim = null;
-                }
-            } catch (java.text.ParseException e) {
-                System.out.println("Formato de data/hora inválido! Tente novamente.");
-            }
-        }
-
-        for (RecursoTarefa rt : tarefaAlvo.getRecursosTarefas()) {
-            rt.setHoraIni(dataInicio);
-            rt.setHoraFim(dataFim);
-        }
-
-        tarefaAlvo.registrarExecucaoTarefa(colaborador, dataInicio, dataFim);
-
-        if (!tarefaAlvo.getRecursosTarefas().isEmpty()) {
-            System.out.println("\n--- AJUSTE FINAL DE RECURSOS UTILIZADOS ---");
-            System.out.println("A tarefa terminou. Indique quantas unidades de cada recurso devem voltar ao estoque:");
-
-            for (RecursoTarefa rt : tarefaAlvo.getRecursosTarefas()) {
-                Recurso recursoAlocado = rt.getRecurso();
-
-                Recurso recursoGlobal = null;
-                for (Recurso r : empresa.getRecursosDB()) {
-                    if (r.getId() == recursoAlocado.getId()) {
-                        recursoGlobal = r;
-                        break;
-                    }
-                }
-
-                if (recursoGlobal == null) continue;
-
-                int quantidadeDevolver = -1;
-                while (quantidadeDevolver < 0 || quantidadeDevolver > recursoAlocado.getQuantidade()) {
-                    System.out.println("Recurso: " + recursoAlocado.getNome());
-                    System.out.println("Quantidade alocada: " + recursoAlocado.getQuantidade());
-                    System.out.print("Quantas unidades devem VOLTAR ao estoque? (0 = nenhuma): ");
-                    quantidadeDevolver = Utilitarios.lerInteiroComVerificacao();
-
-                    if (quantidadeDevolver < 0 || quantidadeDevolver > recursoAlocado.getQuantidade()) {
-                        System.out.println("Quantidade inválida! Deve ser entre 0 e " + recursoAlocado.getQuantidade() + ".");
-                    }
-                }
-
-                int quantidadeConsumida = recursoAlocado.getQuantidade() - quantidadeDevolver;
-
-                if (quantidadeDevolver > 0) {
-                    recursoGlobal.atualizarQuantidade(-quantidadeDevolver);
-                    System.out.println(quantidadeDevolver + " unidades de '" + recursoAlocado.getNome() + "' devolvidas ao estoque.");
-                }
-
-                recursoAlocado.setQuantidade(quantidadeConsumida);
-                System.out.println(quantidadeConsumida + " unidades de '" + recursoAlocado.getNome() + "' consumidas definitivamente.");
-
-                HistoricoUsoRecurso hist = new HistoricoUsoRecurso(
-                    recursoGlobal.getId(),
-                    recursoGlobal.getNome(),
-                    tarefaAlvo.getNome(),
-                    buscarNomeEventoDaTarefa(tarefaAlvo, empresa),
-                    quantidadeConsumida,
-                    quantidadeDevolver > 0,
-                    dataFim
-                );
-                empresa.getHistoricoUsoRecursos().add(hist);
-            }
-        }
-
-        System.out.println("\nExecução da tarefa '" + tarefaAlvo.getNome() + "' registrada com sucesso!");
-        sistema.serializarEmpresa(empresa);
-    }
-    
     public static void registrarRecursos(Tarefa tarefa, List<Recurso> recursosDisponiveis,Empresa empresa,Sistema sistema) {
         boolean loop = true;
         while (loop) {
