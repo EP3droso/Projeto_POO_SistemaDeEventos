@@ -3,6 +3,7 @@ package ucs.poo.trabalho_eventos.Relatorio;
 import java.util.Date;
 import ucs.poo.trabalho_eventos.Evento.Evento;
 import ucs.poo.trabalho_eventos.Relacionamentos.ColaboradorTarefa;
+import ucs.poo.trabalho_eventos.Relacionamentos.EventoTarefa;
 import ucs.poo.trabalho_eventos.Relacionamentos.HistoricoUsoRecurso;
 import ucs.poo.trabalho_eventos.Relacionamentos.RecursoTarefa;
 import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
@@ -28,21 +29,37 @@ public class Relatorio implements RelatorioInterface {
         System.out.println("\n=============================================");
         System.out.println("RELATÓRIO DO EVENTO: " + eventoAlvo.getNome());
         System.out.println("=============================================");
-        
-        if (eventoAlvo.getTarefas().isEmpty()) {
+
+        if (eventoAlvo.getEventoTarefas().isEmpty()) {
             System.out.println("Nenhuma tarefa vinculada a este evento.");
             return;
         }
 
-        for (Tarefa t : eventoAlvo.getTarefas()) {
-            System.out.println("\nTarefa ID: " + t.getId() + " - Nome: " + t.getNome());
-            System.out.println("-> Execuções Realizadas:");
-            if (t.getColaboradoresTarefas().isEmpty()) {
-                System.out.println("   [Nenhuma execução registrada para esta tarefa]");
+        for (EventoTarefa et : eventoAlvo.getEventoTarefas()) {
+            System.out.println("\nTarefa ID: " + et.getTarefa().getId() + " - Nome: " + et.getTarefa().getNome());
+
+            if (!et.foiExecutada()) {
+                System.out.println("-> [Tarefa ainda não executada neste evento]");
+                continue;
+            }
+
+            System.out.println("-> Execução: " + et.getHoraIni() + " -> " + et.getHoraFim());
+
+            System.out.println("-> Colaboradores:");
+            if (et.getColaboradoresTarefas().isEmpty()) {
+                System.out.println("   [Nenhum colaborador alocado]");
             } else {
-                for (ColaboradorTarefa ct : t.getColaboradoresTarefas()) {
-                    System.out.println("   - Colaborador: " + ct.getColaborador().getNome() + 
-                                       " | Início: " + ct.getHoraIni() + " | Fim: " + ct.getHoraFim());
+                for (ColaboradorTarefa ct : et.getColaboradoresTarefas()) {
+                    System.out.println("   - " + ct.getColaborador().getNome());
+                }
+            }
+
+            System.out.println("-> Recursos:");
+            if (et.getRecursosTarefas().isEmpty()) {
+                System.out.println("   [Nenhum recurso alocado]");
+            } else {
+                for (RecursoTarefa rt : et.getRecursosTarefas()) {
+                    System.out.println("   - " + rt.getRecurso().getNome() + " | Qtd: " + rt.getQuantidade());
                 }
             }
         }
@@ -62,92 +79,61 @@ public class Relatorio implements RelatorioInterface {
 
         long inicioMs = inicio.getTime();
         long fimMs = fim.getTime();
+        boolean encontrou = false;
 
-        boolean encontrou = false;        
-        
         if (empresa.getEventos() != null) {
             for (Evento evento : empresa.getEventos()) {
-                if (evento.getTarefas() != null) {
-                    for (Tarefa t : evento.getTarefas()) {
-                        if (t.getColaboradoresTarefas() != null) {
-                            for (ColaboradorTarefa ct : t.getColaboradoresTarefas()) {
-                                
-                                
-                                if (ct.getHoraIni() != null && ct.getHoraFim() != null) {
-                                    long tarefaIniMs = ct.getHoraIni().getTime();
-                                    long tarefaFimMs = ct.getHoraFim().getTime();
+                for (EventoTarefa et : evento.getEventoTarefas()) {
+                    if (!et.foiExecutada()) continue;
 
-                                    
-                                    if (tarefaIniMs >= inicioMs && tarefaFimMs <= fimMs) {
-                                        System.out.println("Evento: " + evento.getNome() + 
-                                                           " | Tarefa: " + t.getNome() + 
-                                                           " | Colaborador: " + (ct.getColaborador() != null ? ct.getColaborador().getNome() : "Desconhecido") +
-                                                           " | Período: " + ct.getHoraIni() + " -> " + ct.getHoraFim());
-                                        encontrou = true;
-                                    }
-                                }
-                            }
+                    long tarefaIniMs = et.getHoraIni().getTime();
+                    long tarefaFimMs = et.getHoraFim().getTime();
+
+                    if (tarefaIniMs >= inicioMs && tarefaFimMs <= fimMs) {
+                        StringBuilder colabs = new StringBuilder();
+                        for (ColaboradorTarefa ct : et.getColaboradoresTarefas()) {
+                            if (colabs.length() > 0) colabs.append(", ");
+                            colabs.append(ct.getColaborador().getNome());
                         }
+                        System.out.println("Evento: " + evento.getNome() +
+                                           " | Tarefa: " + et.getTarefa().getNome() +
+                                           " | Colaboradores: " + (colabs.length() > 0 ? colabs : "nenhum") +
+                                           " | Período: " + et.getHoraIni() + " -> " + et.getHoraFim());
+                        encontrou = true;
                     }
                 }
             }
         }
-        
+
         if (!encontrou) {
             System.out.println("Nenhuma execução realizada neste período.");
         }
     }
+
     @Override
     public void gerarRelatorioRecursosTarefa(int idTarefa, Empresa empresa) {
         System.out.println("\n=============================================");
-        System.out.println("BUSCANDO RECURSOS PARA O ID DA TAREFA: " + idTarefa);
+        System.out.println("RECURSOS ALOCADOS PARA A TAREFA ID: " + idTarefa);
         System.out.println("=============================================");
 
-        boolean encontrouQualquerTarefa = false;
-        boolean encontrouRecurso = false;
+        boolean achouTarefaNoEvento = false;
+        boolean achouRecurso = false;
 
-        
-        if (empresa.getTarefasDB() != null) {
-            for (Tarefa t : empresa.getTarefasDB()) {
-                if (t.getId() == idTarefa) {
-                    encontrouQualquerTarefa = true;
-                    System.out.println("\nNome: " + t.getNome());
-                    
-                    if (t.getRecursosTarefas() != null && !t.getRecursosTarefas().isEmpty()) {
-                        for (RecursoTarefa rt : t.getRecursosTarefas()) {
-                            if (rt.getRecurso() != null) {
-                                System.out.println("  - Recurso: " + rt.getRecurso().getNome() + 
-                                                   " (Tipo: " + rt.getRecurso().getTipo() + ")" +
-                                                   " | Qtd: " + rt.getRecurso().getQuantidade());
-                                encontrouRecurso = true;
-                            }
-                        }
+        for (Evento ev : empresa.getEventos()) {
+            for (EventoTarefa et : ev.getEventoTarefas()) {
+                if (et.getTarefa() != null && et.getTarefa().getId() == idTarefa) {
+                    achouTarefaNoEvento = true;
+                    System.out.println("\nEvento: " + ev.getNome() + " | Tarefa: " + et.getTarefa().getNome());
+
+                    if (et.getRecursosTarefas().isEmpty()) {
+                        System.out.println("  -> Nenhum recurso alocado nesta instância.");
                     } else {
-                        System.out.println("  -> Nenhum recurso alocado nesta instância do Banco Geral.");
-                    }
-                }
-            }
-        }
-
-        if (empresa.getEventos() != null) {
-            for (ucs.poo.trabalho_eventos.Evento.Evento evento : empresa.getEventos()) {
-                if (evento.getTarefas() != null) {
-                    for (Tarefa t : evento.getTarefas()) {
-                        if (t.getId() == idTarefa) {
-                            encontrouQualquerTarefa = true;
-                            System.out.println("\n Nome da Tarefa: " + t.getNome());
-                            
-                            if (t.getRecursosTarefas() != null && !t.getRecursosTarefas().isEmpty()) {
-                                for (RecursoTarefa rt : t.getRecursosTarefas()) {
-                                    if (rt.getRecurso() != null) {
-                                        System.out.println("  - Recurso: " + rt.getRecurso().getNome() + 
-                                                           " (Tipo: " + rt.getRecurso().getTipo() + ")" +
-                                                           " | Qtd Alocada/Consumida: " + rt.getRecurso().getQuantidade());
-                                        encontrouRecurso = true;
-                                    }
-                                }
-                            } else {
-                                System.out.println("  -> Nenhum recurso alocado nesta instância do Evento.");
+                        for (RecursoTarefa rt : et.getRecursosTarefas()) {
+                            if (rt.getRecurso() != null) {
+                                System.out.println("  - Recurso: " + rt.getRecurso().getNome() +
+                                                   " (Tipo: " + rt.getRecurso().getTipo() + ")" +
+                                                   " | Qtd: " + rt.getQuantidade());
+                                achouRecurso = true;
                             }
                         }
                     }
@@ -155,13 +141,22 @@ public class Relatorio implements RelatorioInterface {
             }
         }
 
-        if (!encontrouQualquerTarefa) {
-            System.out.println("Erro: Nenhuma tarefa com o ID " + idTarefa + " foi localizada no sistema.");
-        } else if (!encontrouRecurso) {
-            System.out.println("\nA tarefa existe, mas nenhuma unidade de recurso ficou associada a ela.");
+        if (!achouTarefaNoEvento) {
+            boolean existeNoBanco = false;
+            for (Tarefa t : empresa.getTarefasDB()) {
+                if (t.getId() == idTarefa) { existeNoBanco = true; break; }
+            }
+            if (existeNoBanco) {
+                System.out.println("A tarefa existe no banco, mas não está alocada em nenhum evento.");
+            } else {
+                System.out.println("Erro: Nenhuma tarefa com o ID " + idTarefa + " foi localizada no sistema.");
+            }
+        } else if (!achouRecurso) {
+            System.out.println("\nA tarefa está nos eventos, mas nenhum recurso ficou associado a ela.");
         }
         System.out.println("=============================================\n");
     }
+
     @Override
     public void verificarUsoRecursoAoLongoDoTempo(int idRecurso, Empresa empresa) {
         System.out.println("\n=============================================");
@@ -176,8 +171,8 @@ public class Relatorio implements RelatorioInterface {
         boolean encontrou = false;
         for (HistoricoUsoRecurso hur : empresa.getHistoricoUsoRecursos()) {
             if (hur.getIdRecurso() == idRecurso) {
-                System.out.println("- Data/Hora: " + hur.getDataUso() + 
-                                   " | Tarefa Vinculada: " + hur.getNomeTarefa() + 
+                System.out.println("- Data/Hora: " + hur.getDataUso() +
+                                   " | Tarefa Vinculada: " + hur.getNomeTarefa() +
                                    " | Quantidade Utilizada: " + hur.getQuantidadeUsada());
                 encontrou = true;
             }

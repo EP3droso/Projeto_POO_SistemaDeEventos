@@ -22,7 +22,17 @@ public class ColaboradorTarefa {
         this.horaIni = horaIni;
         this.horaFim = horaFim;
     }
-    
+
+    /**
+     * Construtor para pré-vínculo de um colaborador a uma tarefa (sem execução
+     * registrada ainda). As datas ficam nulas até a execução ser registrada.
+     */
+    public ColaboradorTarefa(Colaborador colaborador) {
+        if (colaborador == null)
+            throw new IllegalArgumentException("É obrigatório informar o colaborador.");
+        this.colaborador = colaborador;
+    }
+
     public ColaboradorTarefa() {
     }
 

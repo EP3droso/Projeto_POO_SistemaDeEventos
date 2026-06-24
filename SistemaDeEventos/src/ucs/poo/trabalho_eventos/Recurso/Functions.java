@@ -2,8 +2,8 @@ package ucs.poo.trabalho_eventos.Recurso;
 
 import java.util.Scanner;
 
-import ucs.poo.trabalho_eventos.Relacionamentos.RecursoTarefa;
-import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
+import ucs.poo.trabalho_eventos.Evento.Evento;
+import ucs.poo.trabalho_eventos.Relacionamentos.EventoTarefa;
 import ucs.poo.trabalho_eventos.main.Empresa;
 import ucs.poo.trabalho_eventos.main.Sistema;
 import ucs.poo.trabalho_eventos.main.Utilitarios;
@@ -46,11 +46,9 @@ public class Functions {
     }
 
     public static void adicionarRecurso(Empresa empresa, Sistema sistema) {
-        Scanner sc = new Scanner(System.in);
         listarRecursos(empresa);
 
-        System.out.println("Insira o nome do recurso:");
-        String nome = sc.nextLine();
+        String nome = Utilitarios.lerStringNaoVazia("Insira o nome do recurso:");
 
         for (Recurso r : empresa.getRecursosDB()) {
             if (r.getNome().equalsIgnoreCase(nome)) {
@@ -59,8 +57,7 @@ public class Functions {
             }
         }
 
-        System.out.println("Insira o tipo do recurso:");
-        String tipo = sc.nextLine();
+        String tipo = Utilitarios.lerStringNaoVazia("Insira o tipo do recurso:");
 
         System.out.println("Insira a quantidade inicial do recurso:");
         int quantidade = Utilitarios.lerInteiroComVerificacao();
@@ -106,12 +103,11 @@ public class Functions {
             return;
         }
 
-        for (Tarefa t : empresa.getTarefasDB()) {
-            java.util.List<RecursoTarefa> paraRemover = new java.util.ArrayList<>();
-            for (RecursoTarefa rt : t.getRecursosTarefas()) {
-                if (rt.getRecurso().getId() == idRecurso) paraRemover.add(rt);
+        // Remove as alocações deste recurso em todas as tarefas de todos os eventos.
+        for (Evento ev : empresa.getEventos()) {
+            for (EventoTarefa et : ev.getEventoTarefas()) {
+                et.getRecursosTarefas().removeIf(rt -> rt.getRecurso() != null && rt.getRecurso().getId() == idRecurso);
             }
-            t.getRecursosTarefas().removeAll(paraRemover);
         }
 
         empresa.getRecursosDB().remove(recursoParaRemover);

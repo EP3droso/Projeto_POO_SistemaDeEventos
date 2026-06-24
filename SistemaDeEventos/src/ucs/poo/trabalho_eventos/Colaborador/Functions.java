@@ -3,6 +3,7 @@ package ucs.poo.trabalho_eventos.Colaborador;
 import java.util.Scanner;
 import ucs.poo.trabalho_eventos.main.Empresa;
 import ucs.poo.trabalho_eventos.main.Sistema;
+import ucs.poo.trabalho_eventos.main.Utilitarios;
 
 public class Functions {
     
@@ -15,17 +16,12 @@ public class Functions {
     }
 
     public static void cadastrarColaborador(Empresa empresa, Sistema sistema) {
-        Scanner sc = new Scanner(System.in);
         try {
-            System.out.println("Insira o nome do colaborador:");
-            String nome = sc.nextLine();
-            System.out.println("Insira o email do colaborador:");
-            String email = sc.nextLine();
-            System.out.println("Insira a senha do colaborador:");
-            String senha = sc.nextLine();
-            System.out.println("Insira a função do colaborador:");
-            String funcao = sc.nextLine();
-            
+            String nome = Utilitarios.lerStringNaoVazia("Insira o nome do colaborador:");
+            String email = Utilitarios.lerStringNaoVazia("Insira o email do colaborador:");
+            String senha = Utilitarios.lerStringNaoVazia("Insira a senha do colaborador:");
+            String funcao = Utilitarios.lerStringNaoVazia("Insira a função do colaborador:");
+
             Colaborador novoColab = new Colaborador(nome, email, senha, funcao, empresa.getIdAtualEColaboradores());
             
             empresa.setIdAtualEColaboradores(empresa.getIdAtualEColaboradores() + 1);
@@ -76,10 +72,10 @@ public class Functions {
         System.out.println("Digite a nova função do colaborador:");
         String novaFuncao = sc.nextLine();
 
-        if (!"".equals(novoNome)) colabAux.setNome(novoNome);
-        if (!"".equals(novoEmail)) colabAux.setEmail(novoEmail);
-        if (!"".equals(novaSenha)) colabAux.setSenha(novaSenha);
-        if (!"".equals(novaFuncao)) colabAux.setFuncao(novaFuncao);
+        if (!novoNome.isBlank()) colabAux.setNome(novoNome);
+        if (!novoEmail.isBlank()) colabAux.setEmail(novoEmail);
+        if (!novaSenha.isBlank()) colabAux.setSenha(novaSenha);
+        if (!novaFuncao.isBlank()) colabAux.setFuncao(novaFuncao);
         
         sistema.serializarEmpresa(empresa);
         System.out.println("Colaborador alterado com sucesso!");

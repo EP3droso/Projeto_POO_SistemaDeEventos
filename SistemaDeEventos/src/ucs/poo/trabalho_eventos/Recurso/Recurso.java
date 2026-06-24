@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 
 import ucs.poo.trabalho_eventos.Relacionamentos.RecursoTarefa;
+import ucs.poo.trabalho_eventos.main.Utilitarios;
 
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -27,8 +28,8 @@ public class Recurso {
 
 	public Recurso(int id, String nome, String tipo, int quantidade) {
 	    this.id = id;
-	    this.nome = nome;
-	    this.tipo = tipo;
+	    setNome(nome);
+	    setTipo(tipo);
 	    this.quantidade = quantidade;
 	}
 	
@@ -59,13 +60,13 @@ public class Recurso {
 		return nome;
 	}
 	public void setNome(String nome) {
-		this.nome = nome;
+		this.nome = Utilitarios.exigirNaoVazio(nome, "Nome do recurso");
 	}
 	public String getTipo() {
 		return tipo;
 	}
 	public void setTipo(String tipo) {
-		this.tipo = tipo;
+		this.tipo = Utilitarios.exigirNaoVazio(tipo, "Tipo do recurso");
 	}
 
 

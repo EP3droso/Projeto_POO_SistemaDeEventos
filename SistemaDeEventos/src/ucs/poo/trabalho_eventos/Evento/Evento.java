@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import ucs.poo.trabalho_eventos.Relacionamentos.EventoTarefa;
 import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
+import ucs.poo.trabalho_eventos.main.Utilitarios;
 
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -15,17 +17,19 @@ import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
     scope = Evento.class
 )
 public class Evento {
-		
+
 	private int id;
 	private String nome;
-	private List<Tarefa> tarefas;
 	private String tipoEvento;
-	
+	// Relação Evento <-> Tarefa controlada por classe intermediária (M:N),
+	// no mesmo padrão de RecursoTarefa.
+	private List<EventoTarefa> eventoTarefas;
 
-	
+
+
 	public Evento(String nome, int i,int id){
-		this(); 
-		this.nome = nome;
+		this();
+		setNome(nome);
 		this.id=id;
 		if(i==1) {
 			this.tipoEvento = "Festa";
@@ -35,11 +39,11 @@ public class Evento {
 			this.tipoEvento = "Evento Corporativo";
 		}
 	}
-	
+
 	public Evento() {
-		this.tarefas = new ArrayList<>();
+		this.eventoTarefas = new ArrayList<>();
 	}
-	
+
 
 	public String getTipoEvento() {
 		return tipoEvento;
@@ -49,55 +53,95 @@ public class Evento {
 		this.tipoEvento = tipoEvento;
 	}
 
-	public void setTarefas(List<Tarefa> tarefas) {
-		this.tarefas = tarefas;
-	}
-
 	public String getTipo(){
 		return tipoEvento;
 	}
-	
+
 	public void setTipo(String tipo) {
 		this.tipoEvento = tipo;
 	}
-	
-	public List<Tarefa> getTarefas() {
-	    return tarefas;
+
+	// ----- Relação intermediária (persistida no JSON) -----
+	public List<EventoTarefa> getEventoTarefas() {
+		return eventoTarefas;
 	}
-	
-	
+
+	public void setEventoTarefas(List<EventoTarefa> eventoTarefas) {
+		this.eventoTarefas = eventoTarefas;
+	}
+
+	/**
+	 * View somente-leitura das tarefas deste evento, derivada da lista de
+	 * EventoTarefa. Mantida para não quebrar o restante do sistema, que
+	 * continua trabalhando diretamente com objetos Tarefa.
+	 * Marcada com @JsonIgnore para que apenas "eventoTarefas" seja persistido.
+	 */
+	@JsonIgnore
+	public List<Tarefa> getTarefas() {
+		List<Tarefa> tarefas = new ArrayList<>();
+		for (EventoTarefa et : eventoTarefas) {
+			tarefas.add(et.getTarefa());
+		}
+		return tarefas;
+	}
+
+
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/**
+	 * Verifica se uma tarefa já está vinculada a este evento (compara pela
+	 * referência da Tarefa).
+	 */
+	@JsonIgnore
+	public boolean possuiTarefa(Tarefa tarefa) {
+		for (EventoTarefa et : eventoTarefas) {
+			if (et.getTarefa() != null && et.getTarefa().equals(tarefa)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public void cadastrarTarefa(Tarefa tarefa) {
-		this.tarefas.add(tarefa);
+		this.eventoTarefas.add(new EventoTarefa(this, tarefa));
 	}
-	
+
 	public void listarTarefas() {
-		for(Tarefa aux : this.tarefas) {
+		List<Tarefa> tarefas = getTarefas();
+		for(Tarefa aux : tarefas) {
 			System.out.println((tarefas.indexOf(aux) + 1)+ " - " + aux.getNome());
 		}
 	}
-	
+
 	@JsonIgnore
-	public Tarefa getTarefa(int id){
+	public Tarefa getTarefa(int index){
 		try {
-		return this.tarefas.get(id);
+			return this.eventoTarefas.get(index).getTarefa();
 		}
 		catch(IndexOutOfBoundsException e) {
 			return null;
 		}
 	}
-	
-	public void excluirTarefa(int id) {
-		Tarefa tarefaAux = this.getTarefa(id);
-		if(tarefaAux != null) {
-			this.tarefas.remove(tarefaAux);
+
+	public void excluirTarefa(int index) {
+		try {
+			this.eventoTarefas.remove(index);
+		}
+		catch(IndexOutOfBoundsException e) {
+			// índice inválido: nada a remover
 		}
 	}
-	
+
+	/**
+	 * Remove o vínculo desta tarefa com o evento (usado quando uma tarefa é
+	 * excluída do sistema). Remove todas as ocorrências por segurança.
+	 */
+	public void removerVinculoTarefa(Tarefa tarefa) {
+		this.eventoTarefas.removeIf(et -> et.getTarefa() != null && et.getTarefa().equals(tarefa));
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -106,9 +150,9 @@ public class Evento {
 		return nome;
 	}
 	public void setNome(String nome) {
-		this.nome = nome;
+		this.nome = Utilitarios.exigirNaoVazio(nome, "Nome do evento");
 	}
-	
-	
-	
+
+
+
 }

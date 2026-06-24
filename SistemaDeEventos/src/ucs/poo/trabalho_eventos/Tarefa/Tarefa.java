@@ -2,49 +2,31 @@ package ucs.poo.trabalho_eventos.Tarefa;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Scanner;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import java.util.Date;
-
-import ucs.poo.trabalho_eventos.Colaborador.Colaborador;
-import ucs.poo.trabalho_eventos.Recurso.Recurso;
-import ucs.poo.trabalho_eventos.Relacionamentos.ColaboradorTarefa;
-import ucs.poo.trabalho_eventos.Relacionamentos.RecursoTarefa;
 import ucs.poo.trabalho_eventos.main.Utilitarios;
 
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator.class,
-    property = "id",  
+    property = "id",
     scope = Tarefa.class
 )
 public class Tarefa {
-	
+
 	int id;
 	private String nome;
 	List<Tarefa> preRequesitos = new ArrayList<>();
-	List<RecursoTarefa> recursosTarefas = new ArrayList<>();
-	List<ColaboradorTarefa> colaboradoresTarefas = new ArrayList<>();
-	
-	
+
+
 	public Tarefa() {
-		
+
 	}
-	
-	public void verificarOrdemExecucao() throws TarefaForaDeOrdemException {
-	    for (Tarefa pre : preRequesitos) {
-	        if (pre.getColaboradoresTarefas().isEmpty()) {
-	            throw new TarefaForaDeOrdemException(pre.getNome());
-	        }
-	    }
-	}
-	
+
 	public Tarefa(String nome,int id) {
 		this.id = id;
-		this.nome = nome;
+		setNome(nome);
 	}
 
 	public int getId() {
@@ -55,22 +37,14 @@ public class Tarefa {
 		this.id = id;
 	}
 
-	public void setRecursosTarefas(List<RecursoTarefa> recursosTarefas) {
-		this.recursosTarefas = recursosTarefas;
-	}
-
-	public void setColaboradoresTarefas(List<ColaboradorTarefa> colaboradoresTarefas) {
-		this.colaboradoresTarefas = colaboradoresTarefas;
-	}
-
 	public String getNome() {
 		return nome;
 	}
 
 	public void setNome(String nome) {
-		this.nome = nome;
+		this.nome = Utilitarios.exigirNaoVazio(nome, "Nome da tarefa");
 	}
-	
+
 	public boolean setPreRequisito(Tarefa t1) {
 	    if (t1 == null) {
 	        return false;
@@ -88,7 +62,7 @@ public class Tarefa {
 	            break;
 	        }
 	    }
-	    
+
 	    if(achou) {
 	        System.out.println("Tarefa já implementada como pré-requisito");
 	        return false;
@@ -114,31 +88,7 @@ public class Tarefa {
 	    }
 	    return false;
 	}
-	
-	@JsonIgnore
-	public String getRecursos() {
-		String recursosString="";
-		for(RecursoTarefa rt1 : recursosTarefas)
-			recursosString += recursosString + rt1.getRecurso();		
-		return recursosString;				
-	}
-	
-		
-	public void registrarExecucaoTarefa(Colaborador colaborador, Date horaIni, Date horaFim){
-	    ColaboradorTarefa execucao = new ColaboradorTarefa(colaborador, horaIni, horaFim);
-	    colaboradoresTarefas.add(execucao);
-	    System.out.println("Execução registrada com sucesso!");
-	}
-	
 
-	public List<RecursoTarefa> getRecursosTarefas() {
-	    return this.recursosTarefas;
-	}
-	
-	public List<ColaboradorTarefa> getColaboradoresTarefas() {
-	    return colaboradoresTarefas;
-	}
-	
 	public List<Tarefa> getPreRequesitos() {
 		return preRequesitos;
 	}
@@ -146,19 +96,18 @@ public class Tarefa {
 	public void setPreRequesitos(List<Tarefa> preRequesitos) {
 		this.preRequesitos = preRequesitos;
 	}
-	
+
 	@Override
 	public String toString() {
 		if(preRequesitos.isEmpty()) {
-			return "Tarefa= " + nome + "Pré-Requesitos= 0 Recursos Usados =" + this.getRecursos();
+			return "Tarefa= " + nome + " | Pré-Requesitos= 0";
 		}
-		else {
-			return "Tarefa= " + nome + "Pré-Requesitos= " + preRequesitos + "RecursosTarefas=" + recursosTarefas + "]";
-		}
+		return "Tarefa= " + nome + " | Pré-Requesitos= " + preRequesitos.size();
 	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(nome, preRequesitos, recursosTarefas);
+		return Objects.hash(nome);
 	}
 
 	@Override
@@ -170,8 +119,7 @@ public class Tarefa {
 		if (getClass() != obj.getClass())
 			return false;
 		Tarefa other = (Tarefa) obj;
-		return Objects.equals(nome, other.nome) && Objects.equals(preRequesitos, other.preRequesitos)
-				&& Objects.equals(recursosTarefas, other.recursosTarefas);
+		return Objects.equals(nome, other.nome);
 	}
-	
+
 }
