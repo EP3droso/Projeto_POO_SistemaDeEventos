@@ -4,8 +4,6 @@ import java.util.Scanner;
 
 public abstract class Utilitarios {
 		
-	//Criado essa função auxiliar, pois o sc.nextInt deixa o caractere de "Enter" (quebra de linha) no buffer.
-	//Alem disso ele ja faz a verificação de se a entrada é realmente um numero
 	public static int lerInteiroComVerificacao() {
 		Scanner sc = new Scanner(System.in);
 		String stringEntrada = sc.nextLine();
@@ -24,9 +22,6 @@ public abstract class Utilitarios {
 		}
 	}
 
-	//PADRÃO DE LEITURA: lê uma String obrigatória, repetindo a pergunta
-	//enquanto a entrada estiver vazia (ou só com espaços). Sempre retorna
-	//um texto não-vazio e já sem espaços nas pontas.
 	public static String lerStringNaoVazia(String mensagem) {
 		Scanner sc = new Scanner(System.in);
 		while(true) {

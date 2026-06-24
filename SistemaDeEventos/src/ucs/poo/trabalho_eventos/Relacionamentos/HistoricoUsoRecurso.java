@@ -9,7 +9,7 @@ public class HistoricoUsoRecurso {
     private String nomeTarefa;
     private String nomeEvento;
     private int quantidadeUsada;
-    private boolean foiDevolvido; // true = equipamento, false = consumivel
+    private boolean foiDevolvido;
     private Date dataUso;
 
     public HistoricoUsoRecurso(int idRecurso, String nomeRecurso, String nomeTarefa, 

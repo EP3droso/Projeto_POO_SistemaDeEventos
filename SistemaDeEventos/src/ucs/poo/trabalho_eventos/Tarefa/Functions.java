@@ -98,7 +98,6 @@ public class Functions {
         Tarefa tarefaAux = new Tarefa(nomeTarefa, empresa.getIdAtualTarefas());
         empresa.setIdAtualTarefas(empresa.getIdAtualTarefas() + 1);
 
-        // Seleção de pré-requisitos (somente se já existem outras tarefas).
         boolean loop = !empresa.getTarefasDB().isEmpty();
         while (loop) {
             List<Tarefa> disponiveis = new ArrayList<>();
@@ -291,15 +290,12 @@ public class Functions {
         Tarefa tarefaParaRemover = selecionarTarefaPorPosicao(empresa);
         if (tarefaParaRemover == null) return;
 
-        // Remove esta tarefa da lista de pré-requisitos das demais.
         for (Tarefa t : empresa.getTarefasDB()) {
             if (!t.equals(tarefaParaRemover)) {
                 t.getPreRequesitos().remove(tarefaParaRemover);
             }
         }
 
-        // Remove o vínculo (e suas execuções/alocações) da tarefa em todos os
-        // eventos que a utilizavam, evitando referências inválidas.
         for (ucs.poo.trabalho_eventos.Evento.Evento evento : empresa.getEventos()) {
             evento.removerVinculoTarefa(tarefaParaRemover);
         }

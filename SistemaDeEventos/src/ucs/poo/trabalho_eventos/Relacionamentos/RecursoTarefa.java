@@ -9,9 +9,6 @@ import ucs.poo.trabalho_eventos.Tarefa.Tarefa;
 public class RecursoTarefa {
     private Date horaIni;
     private Date horaFim;
-    // Quantidade do recurso alocada/consumida NESTA tarefa.
-    // Fica na junção (e não numa cópia de Recurso), pois o recurso é
-    // serializado apenas por ID e resolveria para o recurso global no reload.
     private int quantidade;
     @JsonIdentityReference(alwaysAsId = true)
     private Recurso recurso;

@@ -28,14 +28,6 @@ public class Functions {
 		return false;
 	}
 
-	// ================================================================
-	//  REGISTRAR/EXECUTAR TAREFA NO EVENTO
-	//  Aqui acontece a alocação de colaboradores e recursos para a
-	//  tarefa especificada, com as regras:
-	//   - pré-requisitos da tarefa devem estar executados antes (no evento);
-	//   - um colaborador não pode estar em duas execuções ao mesmo tempo;
-	//   - um recurso não pode ser usado além da sua capacidade no mesmo horário.
-	// ================================================================
 	public static void registrarTarefas(Evento eventoAlvo, Empresa empresa, Sistema sistema) {
 		Scanner sc = new Scanner(System.in);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -47,7 +39,6 @@ public class Functions {
 			return;
 		}
 
-		// 1) Selecionar a tarefa do evento
 		System.out.println("Tarefas do evento " + eventoAlvo.getNome() + ":");
 		for (int i = 0; i < ets.size(); i++) {
 			EventoTarefa et = ets.get(i);
@@ -68,7 +59,6 @@ public class Functions {
 			etAlvo.limparExecucao();
 		}
 
-		// 2) Ler janela de tempo da execução
 		Date dataInicio = null;
 		while (dataInicio == null) {
 			System.out.print("Insira a data e hora de INÍCIO (DD/MM/AAAA HH:MM): ");
@@ -92,14 +82,12 @@ public class Functions {
 			}
 		}
 
-		// 3) Pré-requisitos devem estar executados (neste evento) antes do início
 		String bloqueio = verificarPreRequisitosNoEvento(eventoAlvo, etAlvo, dataInicio);
 		if (bloqueio != null) {
 			System.out.println("Erro: " + bloqueio);
 			return;
 		}
 
-		// 4) Alocar colaboradores (pelo menos 1), checando conflito de horário
 		if (ucs.poo.trabalho_eventos.Colaborador.Functions.colaboradoresIsEmpty(empresa)) {
 			System.out.println("Cadastre um colaborador antes de registrar a execução.");
 			return;
@@ -137,7 +125,6 @@ public class Functions {
 			return;
 		}
 
-		// 5) Alocar recursos (opcional), checando disponibilidade por quantidade no horário
 		System.out.println("\n--- ALOCAÇÃO DE RECURSOS ---");
 		if (empresa.getRecursosDB().isEmpty()) {
 			System.out.println("Nenhum recurso cadastrado. Pulando alocação de recursos.");
@@ -185,13 +172,9 @@ public class Functions {
 			}
 		}
 
-		// 6) Confirma a execução: grava a janela de tempo
 		etAlvo.setHoraIni(dataInicio);
 		etAlvo.setHoraFim(dataFim);
 
-		// 7) Devolução ao estoque: pergunta quanto de cada recurso volta. O que
-		//    não voltar é consumido definitivamente e reduz o total do recurso.
-		//    Também alimenta o histórico de uso.
 		if (!etAlvo.getRecursosTarefas().isEmpty()) {
 			System.out.println("\n--- DEVOLUÇÃO DE RECURSOS AO ESTOQUE ---");
 		}
@@ -211,7 +194,6 @@ public class Functions {
 
 			int consumido = usado - devolver;
 			if (consumido > 0) {
-				// Consumo definitivo: reduz o total (capacidade) do recurso.
 				recurso.setQuantidade(recurso.getQuantidade() - consumido);
 				System.out.println(consumido + " unidade(s) de '" + recurso.getNome() + "' consumida(s) definitivamente.");
 			}
@@ -235,9 +217,7 @@ public class Functions {
 		sistema.serializarEmpresa(empresa);
 	}
 
-	// ---------- Helpers de conflito / disponibilidade ----------
 
-	/** Dois intervalos se sobrepõem? Encostar nas pontas (fim==início) não conta como conflito. */
 	private static boolean sobrepoe(Date aIni, Date aFim, Date bIni, Date bFim) {
 		if (aIni == null || aFim == null || bIni == null || bFim == null) return false;
 		return aIni.before(bFim) && bIni.before(aFim);
@@ -264,7 +244,6 @@ public class Functions {
 		return null;
 	}
 
-	/** Retorna a execução conflitante (mesmo colaborador, horário sobreposto), ou null. */
 	private static EventoTarefa conflitoColaborador(Empresa empresa, Colaborador c, Date ini, Date fim, EventoTarefa etAtual) {
 		for (Evento ev : empresa.getEventos()) {
 			for (EventoTarefa et : ev.getEventoTarefas()) {
@@ -280,7 +259,6 @@ public class Functions {
 		return null;
 	}
 
-	/** Soma a quantidade do recurso já reservada em execuções que se sobrepõem ao horário. */
 	private static int quantidadeReservada(Empresa empresa, Recurso r, Date ini, Date fim, EventoTarefa etAtual) {
 		int total = 0;
 		for (Evento ev : empresa.getEventos()) {
@@ -297,7 +275,6 @@ public class Functions {
 		return total;
 	}
 
-	/** Verifica se todos os pré-requisitos da tarefa foram executados neste evento antes do início. Retorna mensagem de bloqueio ou null. */
 	private static String verificarPreRequisitosNoEvento(Evento ev, EventoTarefa etAlvo, Date inicio) {
 		for (Tarefa pre : etAlvo.getTarefa().getPreRequesitos()) {
 			EventoTarefa preEt = null;
@@ -320,7 +297,6 @@ public class Functions {
 		return null;
 	}
 
-	/** Pesquisa tarefas do banco por parte do nome (vazio = todas), imprime e retorna a lista filtrada. */
 	public static List<Tarefa> pesquisarTarefas(Empresa empresa) {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Digite o nome da tarefa(pode ser digitado somente parte do nome):");
@@ -339,7 +315,6 @@ public class Functions {
 		return filtradas;
 	}
 
-	// ================================================================
 
 	public static void cadastrarEvento(Empresa empresa, Sistema sistema, List<Evento> eventosDB) {
 		String nomeEvento = Utilitarios.lerStringNaoVazia("Insira o nome do evento:");
@@ -350,12 +325,17 @@ public class Functions {
 		int tipo = Utilitarios.lerInteiroComVerificacao();
 		Evento eventoAux = new Evento(nomeEvento, tipo, empresa.getIdAtualEventos());
 
-		empresa.setIdAtualEventos(empresa.getIdAtualEventos()+1);
-
-		eventosDB.add(eventoAux);
-		empresa.setEventos(eventosDB);
-		sistema.serializarEmpresa(empresa);
-		System.out.println("Evento Cadastrado com sucesso!");
+		if(tipo >=1 && tipo<=3) {
+			empresa.setIdAtualEventos(empresa.getIdAtualEventos()+1);
+			eventosDB.add(eventoAux);
+			empresa.setEventos(eventosDB);
+			sistema.serializarEmpresa(empresa);
+			System.out.println("Evento Cadastrado com sucesso!");
+		}
+		else {
+			System.out.println("Erro ao cadastrar Evento");
+		}
+		
 	}
 
 	public static  void listarEventos(Empresa empresa) {

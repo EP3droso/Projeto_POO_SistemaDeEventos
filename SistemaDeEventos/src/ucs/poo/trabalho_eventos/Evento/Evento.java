@@ -21,8 +21,6 @@ public class Evento {
 	private int id;
 	private String nome;
 	private String tipoEvento;
-	// Relação Evento <-> Tarefa controlada por classe intermediária (M:N),
-	// no mesmo padrão de RecursoTarefa.
 	private List<EventoTarefa> eventoTarefas;
 
 
@@ -61,7 +59,6 @@ public class Evento {
 		this.tipoEvento = tipo;
 	}
 
-	// ----- Relação intermediária (persistida no JSON) -----
 	public List<EventoTarefa> getEventoTarefas() {
 		return eventoTarefas;
 	}
@@ -69,13 +66,6 @@ public class Evento {
 	public void setEventoTarefas(List<EventoTarefa> eventoTarefas) {
 		this.eventoTarefas = eventoTarefas;
 	}
-
-	/**
-	 * View somente-leitura das tarefas deste evento, derivada da lista de
-	 * EventoTarefa. Mantida para não quebrar o restante do sistema, que
-	 * continua trabalhando diretamente com objetos Tarefa.
-	 * Marcada com @JsonIgnore para que apenas "eventoTarefas" seja persistido.
-	 */
 	@JsonIgnore
 	public List<Tarefa> getTarefas() {
 		List<Tarefa> tarefas = new ArrayList<>();
@@ -130,14 +120,9 @@ public class Evento {
 			this.eventoTarefas.remove(index);
 		}
 		catch(IndexOutOfBoundsException e) {
-			// índice inválido: nada a remover
 		}
 	}
 
-	/**
-	 * Remove o vínculo desta tarefa com o evento (usado quando uma tarefa é
-	 * excluída do sistema). Remove todas as ocorrências por segurança.
-	 */
 	public void removerVinculoTarefa(Tarefa tarefa) {
 		this.eventoTarefas.removeIf(et -> et.getTarefa() != null && et.getTarefa().equals(tarefa));
 	}
